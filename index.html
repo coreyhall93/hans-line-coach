@@ -2084,10 +2084,80 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 });
 
 // ============================================================
+// URL HASH ROUTING
+// ============================================================
+function updateHash() {
+  let hash = state.mode;
+  if (state.currentScene) {
+    hash += '/' + state.currentScene;
+  }
+  if (window.location.hash !== '#' + hash) {
+    history.pushState(null, '', '#' + hash);
+  }
+}
+
+function readHash() {
+  const hash = window.location.hash.replace(/^#/, '');
+  if (!hash) return;
+  const parts = hash.split('/');
+  const mode = parts[0];
+  const sceneId = parts[1] || null;
+  const validModes = ['scene-run', 'cue-response', 'type-it', 'quiz', 'full-script'];
+  if (validModes.includes(mode)) {
+    state.mode = mode;
+    // Update nav button active states
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const dBtn = document.querySelector(`.nav-btn[data-mode="${mode}"]`);
+    if (dBtn) dBtn.classList.add('active');
+    document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+    const sBtn = document.querySelector(`.sidebar-nav-item[data-mode="${mode}"]`);
+    if (sBtn) sBtn.classList.add('active');
+  }
+  if (sceneId) {
+    const validScene = sceneId === 'all' || SCENES.some(s => s.id === sceneId);
+    if (validScene) {
+      state.currentScene = sceneId;
+      state.currentLineIndex = 0;
+      state.quizIndex = 0;
+      state.quizResults = [];
+    }
+  }
+}
+
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.replace(/^#/, '');
+  const parts = hash.split('/');
+  const mode = parts[0];
+  const sceneId = parts[1] || null;
+  const validModes = ['scene-run', 'cue-response', 'type-it', 'quiz', 'full-script'];
+  if (validModes.includes(mode)) {
+    state.mode = mode;
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const dBtn = document.querySelector(`.nav-btn[data-mode="${mode}"]`);
+    if (dBtn) dBtn.classList.add('active');
+    document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+    const sBtn = document.querySelector(`.sidebar-nav-item[data-mode="${mode}"]`);
+    if (sBtn) sBtn.classList.add('active');
+  }
+  state.currentScene = null;
+  if (sceneId) {
+    const validScene = sceneId === 'all' || SCENES.some(s => s.id === sceneId);
+    if (validScene) {
+      state.currentScene = sceneId;
+      state.currentLineIndex = 0;
+      state.quizIndex = 0;
+      state.quizResults = [];
+    }
+  }
+  render();
+});
+
+// ============================================================
 // RENDER FUNCTIONS
 // ============================================================
 function render() {
   updateStats();
+  updateHash();
   const main = document.getElementById('main-content');
 
   switch (state.mode) {
@@ -2744,6 +2814,7 @@ document.addEventListener('keydown', (e) => {
 // ============================================================
 // INITIAL RENDER
 // ============================================================
+readHash();
 render();
 if (isSyncEnabled()) {
   loadFromFirebase().then(() => { render(); updateStats(); });
