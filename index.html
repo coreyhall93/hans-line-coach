@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hans Line Coach - Frozen</title>
+<style>
+  @import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.css');
+  @import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css');
+
+  :root {
+    --black: #161616;
+    --white: #fafafa;
+    --white-strong: #ffffff;
+    --gray-05: #f9f9fa;
+    --gray-10: #e8e8e8;
+    --gray-20: #737373;       /* was #B3B3B3 — now 4.7:1 on white */
+    --gray-30: #525252;       /* was #6d6d6d — now 7.1:1 on white */
+    --gray-40: #414141;
+    --bg: var(--gray-05);
+    --bg-card: var(--white-strong);
+    --bg-subtle: #f0f0f0;
+    --bg-hover: var(--gray-10);
+    --text: var(--black);
+    --text-secondary: var(--gray-40);  /* 10.4:1 on white */
+    --text-muted: var(--gray-30);      /* 7.1:1 on white */
+    --border: var(--gray-10);
+    --link: #0060df;
+    --link-hover: #0250bb;
+    --hans: #1a6b2d;          /* was #28733f — now 5.6:1 on white */
+    --hans-light: #d6ffcd;
+    --hans-bg: #edfced;
+    --anna: #7b2d8e;          /* purple — 5.7:1 on white */
+    --anna-bg: #f9f0fc;
+    --hans-evil: #b91c1c;     /* red for villain Hans — 5.9:1 on white */
+    --hans-evil-bg: #fef2f2;
+    --hans-evil-border: #f5c6c6;
+    --elsa: #0055c4;          /* was #0060df — now 5.2:1 on white */
+    --elsa-bg: #edf5ff;
+    --danger: #c62828;        /* was #ff453f — now 5.6:1 on white */
+    --danger-light: #ffdfe7;
+    --success: #1a6b2d;       /* was #00d230 — now 5.6:1 on white */
+    --success-dark: #1a6b2d;
+    --success-light: #d6ffcd;
+    --warning: #9a4e00;       /* was #ff9456 — now 5.5:1 on white */
+    --warning-light: #fff4de;
+    --radius: 8px;
+    --radius-sm: 4px;
+    --radius-lg: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Snowflakes hidden */
+  .snowflakes { display: none; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 2.5rem 1.5rem 0.5rem;
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .header h1 {
+    font-family: 'Geist', sans-serif;
+    font-size: 2.25rem;
+    color: var(--black);
+    margin-bottom: 0.15rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+
+  .header .subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 0.75rem 1.5rem;
+    position: relative;
+    z-index: 1;
+    max-width: 420px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .stat {
+    text-align: center;
+    flex: 1;
+    padding: 0.4rem 0;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--black);
+    letter-spacing: -0.5px;
+  }
+
+  .stat-label {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  /* Navigation */
+  .nav {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    padding: 0.75rem 1.5rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .nav-btn {
+    padding: 0.55rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .nav-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+  }
+
+  .nav-btn.active {
+    background: var(--black);
+    color: var(--white-strong);
+  }
+
+  /* Main content */
+  .main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0.5rem 1.5rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Scene label */
+  .scene-label {
+    display: inline-block;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  /* Dialogue card wrapper — char-tag + dialogue-line form one unit */
+  .dialogue-card {
+    margin: 0.5rem 0;
+  }
+
+  /* Character name chip */
+  .char-tag {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    background: var(--bg-card);
+    position: relative;
+    top: 1px;
+    margin-left: 0.75rem;
+  }
+
+  .char-tag.hans { color: var(--hans); background: var(--hans-bg); border-color: #b6e2be; }
+  .char-tag.hans-evil { color: var(--hans-evil); background: var(--hans-evil-bg); border-color: var(--hans-evil-border); }
+  .char-tag.anna { color: var(--anna); background: var(--anna-bg); border-color: #dbb8e6; }
+  .char-tag.elsa { color: var(--elsa); background: #edf5ff; border-color: #bdd4f0; }
+  .char-tag.other { color: #6d28d9; background: #f3eeff; border-color: #d4c4f5; }
+  .char-tag.weselton { color: #7c2d12; background: #fef3e6; border-color: #e8cca8; }
+  .char-tag.kristoff { color: var(--gray-30); background: var(--gray-05); border-color: var(--gray-10); }
+  .char-tag.townspeople { color: #3f6212; background: #f3f9e8; border-color: #c8dea6; }
+
+  /* Dialogue line — the card body */
+  .dialogue-line {
+    padding: 0.65rem 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    line-height: 1.7;
+    font-size: 0.9375rem;
+    background: var(--bg-card);
+    color: var(--text);
+  }
+
+  .dialogue-line.cue {
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text-secondary);
+  }
+
+  .dialogue-line.hans-line {
+    background: var(--hans-bg);
+    border-color: #b6e2be;
+    color: var(--text);
+  }
+
+  .dialogue-line.hans-evil-line {
+    background: var(--hans-evil-bg);
+    border-color: var(--hans-evil-border);
+    color: var(--text);
+  }
+
+  .dialogue-line.song {
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.25px;
+  }
+
+  .stage-direction {
+    color: var(--gray-20);
+    font-style: italic;
+    font-size: 0.8125rem;
+    padding: 0.5rem 0.875rem;
+    margin: 0.25rem 0;
+  }
+
+  /* Hidden line reveal */
+  .hidden-line {
+    background: var(--white-strong);
+    border: 2px dashed var(--gray-20);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin: 0.3rem 0;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hidden-line:hover {
+    border-color: var(--black);
+    background: var(--gray-05);
+  }
+
+  .hidden-line .prompt-text {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  .hidden-line.revealed {
+    background: var(--hans-bg);
+    border: 2px solid var(--hans-light);
+    cursor: default;
+    text-align: left;
+  }
+
+  .hidden-line.revealed.evil {
+    background: var(--hans-evil-bg);
+    border: 2px solid var(--hans-evil-border);
+  }
+
+  .hidden-line.revealed .actual-line {
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 0.9375rem;
+  }
+
+  /* Text input mode */
+  .line-input {
+    width: 100%;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    resize: vertical;
+    min-height: 64px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .line-input:focus {
+    outline: none;
+    border-color: var(--black);
+    box-shadow: 0 0 0 1px var(--black);
+  }
+
+  .line-input.correct {
+    border-color: var(--success-dark);
+    background: var(--success-light);
+  }
+
+  .line-input.incorrect {
+    border-color: var(--danger);
+    background: var(--danger-light);
+  }
+
+  /* Buttons — Protocol-style: bold, simple, sharp */
+  .btn {
+    padding: 0.625rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.15s;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-primary {
+    background: var(--black);
+    color: var(--white-strong);
+  }
+
+  .btn-primary:hover {
+    background: var(--gray-40);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 2px solid var(--black);
+  }
+
+  .btn-secondary:hover {
+    background: var(--black);
+    color: var(--white-strong);
+  }
+
+  .btn-gold {
+    background: var(--link);
+    color: var(--white-strong);
+  }
+
+  .btn-gold:hover {
+    background: var(--link-hover);
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  /* Score display */
+  .score-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .score-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .score-fill {
+    height: 100%;
+    background: var(--black);
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  .score-text {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--text);
+    min-width: 40px;
+    text-align: right;
+  }
+
+  /* Similarity feedback */
+  .similarity-feedback {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .similarity-feedback.great {
+    background: var(--success-light);
+    color: var(--success-dark);
+  }
+
+  .similarity-feedback.good {
+    background: var(--warning-light);
+    color: #7c2d12;
+  }
+
+  .similarity-feedback.needs-work {
+    background: var(--danger-light);
+    color: #991b1b;
+  }
+
+  /* Scene select */
+  .scene-select {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .scene-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .scene-card:hover {
+    border-color: var(--black);
+  }
+
+  .scene-card h3 {
+    font-size: 0.9375rem;
+    margin-bottom: 0.2rem;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .scene-card p {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .scene-card .line-count {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--hans);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Confidence rating */
+  .confidence-btns {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .conf-btn {
+    flex: 1;
+    padding: 0.65rem 0.5rem;
+    border: 2px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.8125rem;
+    transition: all 0.15s;
+    text-align: center;
+    font-family: inherit;
+    font-weight: 600;
+  }
+
+  .conf-btn:hover { background: var(--bg-subtle); }
+  .conf-btn.hard { border-color: var(--danger); color: var(--danger); }
+  .conf-btn.hard:hover { background: var(--danger-light); }
+  .conf-btn.medium { border-color: var(--warning); color: #7c2d12; }
+  .conf-btn.medium:hover { background: var(--warning-light); }
+  .conf-btn.easy { border-color: var(--success-dark); color: var(--success-dark); }
+  .conf-btn.easy:hover { background: var(--success-light); }
+
+  /* Multiple choice */
+  .mc-option {
+    padding: 0.75rem 1rem;
+    margin: 0.4rem 0;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.55;
+    font-size: 0.9375rem;
+  }
+
+  .mc-option:hover {
+    border-color: var(--black);
+  }
+
+  .mc-option.selected-correct {
+    border-color: var(--success-dark);
+    background: var(--success-light);
+  }
+
+  .mc-option.selected-wrong {
+    border-color: var(--danger);
+    background: var(--danger-light);
+  }
+
+  .mc-option.show-correct {
+    border-color: var(--success-dark);
+    background: var(--success-light);
+  }
+
+  /* Progress dots */
+  .progress-dots {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.2s;
+  }
+
+  .dot.current { background: var(--black); transform: scale(1.4); }
+  .dot.correct { background: var(--success-dark); }
+  .dot.wrong { background: var(--danger); }
+  .dot.skipped { background: var(--border); }
+
+  /* Keyboard hint */
+  .keyboard-hint {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.65rem;
+  }
+
+  kbd {
+    background: var(--bg-subtle);
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.6875rem;
+    border: 1px solid var(--border);
+    font-family: inherit;
+    font-weight: 600;
+  }
+
+  /* Diff display */
+  .diff-word.correct { color: var(--success-dark); }
+  .diff-word.wrong { color: var(--danger); text-decoration: line-through; }
+  .diff-word.missing { color: var(--warning); }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.75rem; }
+    .header { padding: 1.75rem 1rem 0.5rem; }
+    .card { padding: 1.25rem; border-radius: var(--radius); }
+    .stats-bar { margin: 0 1rem; padding: 0.5rem 0.75rem; }
+    .stat-value { font-size: 1.1rem; }
+    .nav { gap: 2px; padding: 0.5rem 1rem; }
+    .nav-btn { padding: 0.5rem 0.75rem; font-size: 0.78rem; }
+    .main { padding: 0.5rem 1rem 3rem; }
+    .scene-select { grid-template-columns: 1fr; }
+  }
+
+  /* Animations — subtle, Protocol-like */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-in {
+    animation: slideUp 0.2s ease;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .pulse { animation: pulse 2s ease-in-out infinite; }
+
+  .scene-run-container .dialogue-line {
+    opacity: 0;
+    animation: slideUp 0.2s ease forwards;
+  }
+
+  .scroll-anchor {
+    scroll-margin-top: 100px;
+  }
+
+  /* Sync */
+  .sync-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.25rem 0.6rem;
+    font-size: 0.6875rem;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 0.5rem;
+  }
+
+  .sync-btn:hover {
+    border-color: var(--black);
+    color: var(--text);
+  }
+
+  .sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .sync-dot.off { background: var(--gray-20); }
+  .sync-dot.synced { background: var(--success); }
+  .sync-dot.syncing { background: var(--warning); animation: pulse 1s ease-in-out infinite; }
+  .sync-dot.error { background: var(--danger); }
+
+  .sync-input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.875rem;
+    background: var(--bg-card);
+    color: var(--text);
+    transition: border-color 0.15s;
+  }
+
+  .sync-input:focus {
+    outline: none;
+    border-color: var(--black);
+  }
+
+  .sync-input::placeholder { color: var(--gray-20); }
+
+  .sync-field-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .sync-instructions {
+    margin-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+
+  .sync-instructions summary {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .sync-instructions ol {
+    padding-left: 1.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .sync-instructions li {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.25rem;
+  }
+
+  .sync-instructions code {
+    font-family: 'Geist Mono', monospace;
+    background: var(--bg-subtle);
+    padding: 0.1rem 0.3rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+  }
+
+  .sync-status-msg {
+    font-size: 0.8125rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+  }
+
+  .sync-status-msg.connected {
+    background: var(--success-light);
+    color: var(--success);
+  }
+
+  .sync-status-msg.disconnected {
+    background: var(--bg-subtle);
+    color: var(--text-muted);
+  }
+
+  /* Help overlay */
+  .help-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(22, 22, 22, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .help-overlay.hidden { display: none; }
+
+  .help-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    max-width: 480px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .help-content h2 {
+    color: var(--text);
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+  }
+
+  .help-content h3 {
+    color: var(--text);
+    margin-top: 1rem;
+    margin-bottom: 0.35rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
+  .help-content p, .help-content li {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .help-content ul {
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="snowflakes" id="snowflakes"></div>
+
+<div class="header">
+  <h1>Hans Line Coach</h1>
+  <div class="subtitle">Prince Hans of the Southern Isles</div>
+  <button class="sync-btn" id="sync-btn" onclick="openSyncModal()">
+    <span class="sync-dot off" id="sync-dot"></span>
+    <span id="sync-label-text">Sync Off</span>
+  </button>
+</div>
+
+<div class="stats-bar" id="stats-bar">
+  <div class="stat">
+    <div class="stat-value" id="stat-streak">0</div>
+    <div class="stat-label">Streak</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="stat-mastered">0</div>
+    <div class="stat-label">Mastered</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="stat-accuracy">--%</div>
+    <div class="stat-label">Accuracy</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="stat-total">0</div>
+    <div class="stat-label">Practiced</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" data-mode="scene-run">Scene Run</button>
+  <button class="nav-btn" data-mode="cue-response">Cue & Response</button>
+  <button class="nav-btn" data-mode="type-it">Type It</button>
+  <button class="nav-btn" data-mode="quiz">Quiz</button>
+  <button class="nav-btn" data-mode="full-script">Full Script</button>
+</nav>
+
+<div class="main" id="main-content">
+  <!-- Content injected by JS -->
+</div>
+
+<div class="help-overlay hidden" id="help-overlay">
+  <div class="help-content">
+    <h2>How To Use</h2>
+    <h3>Scene Run</h3>
+    <p>Walk through scenes like a real rehearsal. Other characters' lines show, then you reveal or type Hans's lines. Perfect for getting the flow down.</p>
+    <h3>Cue & Response</h3>
+    <p>Flashcard-style. See the cue (what's said before your line), then reveal Hans's response. Rate your confidence to track progress.</p>
+    <h3>Type It</h3>
+    <p>The hardest mode. Type Hans's line from memory. Get instant feedback on accuracy.</p>
+    <h3>Quiz</h3>
+    <p>Multiple choice. Great for song lyrics and tricky lines.</p>
+    <h3>Full Script</h3>
+    <p>Read through all Hans scenes with lines highlighted.</p>
+    <h3>Keyboard Shortcuts</h3>
+    <ul>
+      <li><kbd>Space</kbd> — Reveal line / Next</li>
+      <li><kbd>Enter</kbd> — Submit typed answer</li>
+      <li><kbd>1-3</kbd> — Confidence rating (Hard/Good/Easy)</li>
+    </ul>
+    <div class="btn-group" style="justify-content:center">
+      <button class="btn btn-primary" onclick="document.getElementById('help-overlay').classList.add('hidden')">Got It</button>
+    </div>
+  </div>
+</div>
+
+<div class="help-overlay hidden" id="sync-overlay">
+  <div class="help-content">
+    <h2>Cloud Sync</h2>
+    <p style="color: var(--text-secondary); font-size: 0.875rem;">Sync your progress across iPhone, iPad, and Mac.</p>
+
+    <div id="sync-connected-msg"></div>
+
+    <div style="margin-top: 1.25rem;">
+      <label class="sync-field-label">Firebase Database URL</label>
+      <input type="url" class="sync-input" id="sync-url-input" placeholder="https://your-project-default-rtdb.firebaseio.com" />
+    </div>
+
+    <div style="margin-top: 0.75rem;">
+      <label class="sync-field-label">Your Sync PIN</label>
+      <input type="text" class="sync-input" id="sync-pin-input" placeholder="Any memorable word or code" />
+    </div>
+
+    <div class="btn-group" style="justify-content: center; margin-top: 1.25rem;">
+      <button class="btn btn-primary" onclick="connectSync()">Connect</button>
+      <button class="btn btn-secondary" id="disconnect-btn" onclick="disconnectSync()" style="display:none">Disconnect</button>
+      <button class="btn btn-secondary" onclick="closeSyncModal()">Cancel</button>
+    </div>
+
+    <div class="sync-instructions">
+      <details>
+        <summary>First time? Setup instructions (5 min)</summary>
+        <ol>
+          <li>Go to <strong>console.firebase.google.com</strong></li>
+          <li>Click <strong>Create a project</strong> (name it anything, skip Analytics)</li>
+          <li>In the left sidebar, click <strong>Build → Realtime Database</strong></li>
+          <li>Click <strong>Create Database</strong></li>
+          <li>Select any location, choose <strong>Start in test mode</strong>, click Enable</li>
+          <li>Copy the database URL at the top (looks like <code>https://your-project-default-rtdb.firebaseio.com</code>)</li>
+          <li>Paste it above and choose any PIN you'll remember</li>
+        </ol>
+      </details>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// HANS LINE DATA - Extracted from the Frozen Broadway script
+// ============================================================
+const SCENES = [
+  {
+    id: "first-meeting",
+    title: "First Meeting",
+    act: 1,
+    sceneNum: "Act I, Scene 5",
+    location: "Castle Courtyard",
+    description: "Anna bumps into Hans in the courtyard before the coronation.",
+    lines: [
+      { char: "stage", text: "ANNA slams into HANS. They tumble into Kristoff's ice cart." },
+      { char: "ANNA", text: "Oh, I'm sorry. So sorry..." },
+      { char: "HANS", text: "Oh no. Are you okay?" },
+      { char: "ANNA", text: "I'm fine. How embarrassing. I—" },
+      { char: "HANS", text: "It's perfectly fine. Hi." },
+      { char: "ANNA", text: "... Hi." },
+      { char: "KRISTOFF", text: "Hi... Can I ask you lovebirds something?" },
+      { char: "ANNA", text: "Lovebirds? Ha. No. We've actually never met." },
+      { char: "HANS", text: "But we're meeting now." },
+      { char: "ANNA", text: "Yeah, we are." },
+      { char: "KRISTOFF", text: "That's great. Do you like cold drinks?" },
+      { char: "HANS", text: "Very much.", note: "(simultaneously with Anna)" },
+      { char: "KRISTOFF", text: "You know what makes them so special...? Ice. Nice. Clean. Ice. So, get off my ice!" },
+      { char: "stage", text: "HANS helps ANNA off the ice. KRISTOFF and SVEN exit." },
+      { char: "ANNA", text: "Goodness. That was awkward. Not that you're awkward, but just because we're—I'm awkward. You're gorgeous. Wait, what?" },
+      { char: "HANS", text: "Not nearly as pleasing on the eyes as you." },
+      { char: "ANNA", text: "Me? Ha. Thank you. Oh, Princess Anna of Arendelle." },
+      { char: "HANS", text: "Princess? My Lady." },
+      { char: "stage", text: "HANS falls to his knees." },
+      { char: "ANNA", text: "Oh, no. You don't have to do that. I'm not that princess. No, my sister Elsa is the Queen. I'm not. No. I'm just me." },
+      { char: "HANS", text: "Just you?" },
+      { char: "ANNA", text: "I mean, I'm not the heir, I'm just the spare. Not that I'm complaining. I'm not a complainer. Forget it. I'm not making any sense. See, I've lived a bit of a sheltered life." },
+      { char: "HANS", text: "Really?" },
+      { char: "ANNA", text: "Yeah, so, I'm not so good with actual real live people. But I want to be..." },
+      { char: "HANS", text: "... Good for you." },
+      { char: "ANNA", text: "And you're looking at me like I'm crazy. So, I'm going to go. Have a great day. Forget this ever happened." },
+      { char: "stage", text: "ANNA turns to leave." },
+      { char: "HANS", text: "Wait." },
+    ]
+  },
+  {
+    id: "hans-of-the-southern-isles",
+    title: "Hans of the Southern Isles",
+    act: 1,
+    sceneNum: "Act I, Scene 5",
+    location: "Castle Courtyard",
+    description: "Hans introduces himself through song.",
+    isSong: true,
+    songNumber: "#5",
+    lines: [
+      { char: "HANS", text: "Don't go.", note: "(spoken)" },
+      { char: "HANS", text: "YOU DON'T HAVE TO BE EMBARRASSED\nPRINCESS \"OH, I'M JUST ME\"\n'CAUSE I AM SOMEONE\nEVEN MORE EMBARRASSING TO BE", song: true },
+      { char: "HANS", text: "I'M ONLY THE THIRTEENTH SON OF A KING\nOF A VERY SMALL KINGDOM\nOF VERY SMALL ISLANDS TO THE SOUTH\nAND NOBODY SINGS ABOUT THIS HUMBLE FACE\nOR MY LACK OF GRACE\nOR QUOTES WHAT COMES OUT OF MY MOUTH", song: true },
+      { char: "HANS", text: "Thank goodness.", note: "(spoken, mid-song)" },
+      { char: "HANS", text: "I'VE JOURNEYED A LONG WAY\nTO SEE YOUR SISTER CROWNED\nTO HONOR AND TO BACK YOU\nYET HERE I GO AND SMACK YOU TO THE GROUND\nPLEASE ACCEPT THE HUMBLEST OF APOLOGIES\nFROM A CLUMSY PRINCE WHO'S ONLY COME TO SERVE AND PLEASE\nWITH A LINE OF MEAN BIG BROTHERS THAT GOES ON FOR MILES!\nA MAN YOU WON'T SEE IN A STATUE OF BRONZE\nJUST HANS OF THE SOUTHERN ISLES", song: true },
+      { char: "ANNA", text: "Hi, Hans of the Southern Isles." },
+      { char: "HANS", text: "Hi, Anna of Arendelle." },
+      { char: "stage", text: "ANNA and HANS ogle each other like lovesick saps. Bells ring." },
+      { char: "ANNA", text: "Oh my goodness. The coronation. I have to go. I'll see you later?" },
+      { char: "HANS", text: "Definitely." },
+    ]
+  },
+  {
+    id: "coronation-ball",
+    title: "Coronation Ball",
+    act: 1,
+    sceneNum: "Act I, Scene 7",
+    location: "Castle Ballroom",
+    description: "Hans finds Anna after her tense exchange with Elsa.",
+    lines: [
+      { char: "stage", text: "ELSA exits. ANNA stands there, alone, hurt. HANS spots her and crosses toward her with a smile." },
+      { char: "HANS", text: "Hello again." },
+      { char: "ANNA", text: "Hans." },
+      { char: "HANS", text: "You look upset. Are you okay?" },
+      { char: "ANNA", text: "Long story... Do you want to get some air?" },
+      { char: "HANS", text: "I thought you'd never ask." },
+    ]
+  },
+  {
+    id: "anna-and-hans-talk",
+    title: "Anna & Hans Talk",
+    act: 1,
+    sceneNum: "Act I, Scene 7",
+    location: "Outside the Ballroom",
+    description: "Anna and Hans open up about their pasts before 'Love Is an Open Door.'",
+    lines: [
+      { char: "HANS", text: "I bet you were just the sweetest little girl.", song: true },
+      { char: "ANNA", text: "I was a tornado with pigtails... left way too much to my own devices. Truth is, I never knew why my parents ordered the gates shut, why the celebrations ended, or why Elsa stopped talking to me. All I ever knew was I missed my sister. I spent years trying to figure out what I did. I begged to know, to understand, but all my parents would say is: it's for the best." },
+      { char: "HANS", text: "I hate when people say that. It's like they are really saying: you don't deserve to know the answer." },
+      { char: "ANNA", text: "That's what it felt like." },
+      { char: "HANS", text: "I spent a lot of time alone as a kid, too." },
+      { char: "ANNA", text: "But you have twelve older brothers." },
+      { char: "HANS", text: "Yeah. But if they weren't humiliating me, they were ignoring me. It's not going to be like that when I have a family." },
+      { char: "ANNA", text: "You want a family?" },
+      { char: "HANS", text: "Of course. Don't you?" },
+      { char: "ANNA", text: "Very much." },
+      { char: "ANNA", text: "And there will be nothing but love, and no one will ever be shut out.", song: true },
+      { char: "HANS", text: "Oh Anna, I could never shut you out." },
+    ]
+  },
+  {
+    id: "love-is-an-open-door",
+    title: "Love Is an Open Door",
+    act: 1,
+    sceneNum: "Act I, Scene 7",
+    location: "Outside the Ballroom",
+    description: "The duet where Hans and Anna fall in love (or so Anna thinks).",
+    isSong: true,
+    songNumber: "#7",
+    lines: [
+      { char: "ANNA", text: "Okay, can I just say something crazy?" },
+      { char: "HANS", text: "I love crazy." },
+      { char: "ANNA", text: "ALL MY LIFE HAS BEEN A SERIES OF DOORS IN MY FACE\nAND THEN SUDDENLY I BUMP INTO YOU", song: true },
+      { char: "HANS", text: "I was thinking the same thing, because like...\nI'VE BEEN SEARCHING MY WHOLE LIFE TO FIND MY OWN PLACE\nAND MAYBE IT'S THE PARTY TALKING\nOR THE CHOCOLATE FONDUE...", song: true },
+      { char: "ANNA", text: "BUT WITH YOU...", song: true },
+      { char: "HANS", text: "BUT WITH YOU\nI FOUND MY PLACE", song: true },
+      { char: "ANNA", text: "I SEE YOUR FACE", song: true },
+      { char: "BOTH", text: "AND IT'S NOTHING LIKE I'VE EVER KNOWN BEFORE\nLOVE IS AN OPEN DOOR!\nLOVE IS AN OPEN", song: true },
+      { char: "ANNA", text: "DOOR!", song: true },
+      { char: "HANS", text: "DOOR!", song: true },
+      { char: "BOTH", text: "LOVE IS AN OPEN DOOR!", song: true },
+      { char: "ANNA", text: "WITH YOU!", song: true },
+      { char: "HANS", text: "WITH YOU!", song: true },
+      { char: "ANNA", text: "WITH YOU!", song: true },
+      { char: "HANS", text: "WITH YOU!", song: true },
+      { char: "BOTH", text: "LOVE IS AN OPEN DOOR", song: true },
+      { char: "HANS", text: "I MEAN, IT'S CRAZY", song: true },
+      { char: "ANNA", text: "What?", song: true },
+      { char: "HANS", text: "WE FINISH EACH OTHER'S...", song: true },
+      { char: "ANNA", text: "SANDWICHES!", song: true },
+      { char: "HANS", text: "That's what I was gonna say!" },
+      { char: "ANNA", text: "I'VE NEVER MET SOMEONE", song: true },
+      { char: "BOTH", text: "WHO THINKS SO MUCH LIKE ME\nJinx. Jinx again!\nOUR MENTAL SYNCHRONIZATION\nCAN HAVE BUT ONE EXPLANATION:", song: true },
+      { char: "HANS", text: "YOU—", song: true },
+      { char: "ANNA", text: "AND I—", song: true },
+      { char: "HANS", text: "WERE—", song: true },
+      { char: "ANNA", text: "JUST—", song: true },
+      { char: "BOTH", text: "MEANT TO BE!", song: true },
+      { char: "ANNA", text: "SAY GOODBYE", song: true },
+      { char: "HANS", text: "SAY GOODBYE", song: true },
+      { char: "BOTH", text: "TO THE PAIN OF THE PAST\nWE DON'T HAVE TO FEEL IT ANYMORE!\nLOVE IS AN OPEN DOOR!\nLOVE IS AN OPEN", song: true },
+      { char: "ANNA", text: "DOOR!", song: true },
+      { char: "HANS", text: "DOOR!", song: true },
+      { char: "BOTH", text: "LIFE CAN BE SO MUCH MORE!", song: true },
+      { char: "ANNA", text: "WITH YOU!", song: true },
+      { char: "HANS", text: "WITH YOU!", song: true },
+      { char: "ANNA", text: "WITH YOU!", song: true },
+      { char: "HANS", text: "WITH YOU!", song: true },
+      { char: "BOTH", text: "LOVE IS AN OPEN...", song: true },
+      { char: "stage", text: "They dance." },
+      { char: "HANS", text: "Can I say something crazy?\n(kneeling)\nWill you marry me?" },
+      { char: "ANNA", text: "Can I say something crazier? Yes!" },
+      { char: "stage", text: "HANS lifts ANNA into his arms and spins her around." },
+      { char: "BOTH", text: "LOVE IS AN OPEN DOOR!\nLOVE IS AN OPEN DOOR!\nLIFE CAN BE SO MUCH MORE!", song: true },
+      { char: "ANNA", text: "WITH YOU!", song: true },
+      { char: "HANS", text: "WITH YOU!", song: true },
+      { char: "ANNA", text: "WITH YOU!", song: true },
+      { char: "HANS", text: "WITH YOU!", song: true },
+      { char: "HANS", text: "LOVE IS AN OPEN", song: true },
+      { char: "ANNA", text: "LOVE IS AN OPEN", song: true },
+      { char: "BOTH", text: "DOOR!", song: true },
+    ]
+  },
+  {
+    id: "asking-blessing",
+    title: "Asking Elsa's Blessing",
+    act: 1,
+    sceneNum: "Act I, Scene 7",
+    location: "Castle Ballroom",
+    description: "Hans and Anna ask Elsa for her blessing—things go south fast.",
+    lines: [
+      { char: "ANNA", text: "Elsa? Elsa! I mean... Your Majesty. We would like to ask you something." },
+      { char: "ELSA", text: "We?" },
+      { char: "stage", text: "ANNA nudges HANS." },
+      { char: "HANS", text: "Oh, Prince Hans of the Southern Isles." },
+      { char: "ELSA", text: "What can I do for you, Prince Hans?" },
+      { char: "HANS", text: "Well. Princess Anna and I... We—" },
+      { char: "ANNA", text: "We would like—" },
+      { char: "HANS", text: "your blessing—" },
+      { char: "ANNA", text: "of—" },
+      { char: "BOTH", text: "our marriage!" },
+      { char: "ELSA", text: "Marriage...?" },
+      { char: "ANNA", text: "Yes." },
+      { char: "ELSA", text: "Forgive me, I'm confused." },
+      { char: "ANNA", text: "Well, we haven't worked out all the details yet, of course. We'll need a few days to plan the ceremony." },
+      { char: "ELSA", text: "That's not what I—" },
+      { char: "ANNA", text: "Of course we'll have soup, roast, and ice cream, and then—wait. Would we live here?" },
+      { char: "ELSA", text: "Here?" },
+      { char: "HANS", text: "Absolutely!" },
+      { char: "ELSA", text: "Absolutely not." },
+      { char: "ELSA", text: "May I speak with you alone please, Anna?" },
+      { char: "ANNA", text: "No. Whatever you have to say, you can say to both of us." },
+      { char: "ELSA", text: "All right. You can't marry a man you just met." },
+      { char: "ANNA", text: "You can if it's true love." },
+      { char: "ELSA", text: "What do you know about true love?" },
+      { char: "ANNA", text: "What do you know about me?" },
+      { char: "ELSA", text: "You asked me for my blessing, but my answer is no. I'm sorry. Now, excuse me." },
+      { char: "HANS", text: "Your Majesty, if I may ease your—" },
+      { char: "ELSA", text: "No, you may not. And I think you should go. The celebration is over. Close the gates." },
+    ]
+  },
+  {
+    id: "elsa-flees",
+    title: "After Elsa Flees",
+    act: 1,
+    sceneNum: "Act I, Scene 7",
+    location: "Castle Ballroom",
+    description: "Elsa's powers are revealed. Anna leaves Hans in charge.",
+    lines: [
+      { char: "stage", text: "Ice shoots from ELSA's hand. ELSA flees." },
+      { char: "ANNA", text: "(to HANS) I'm going after her. Take care of Arendelle. I leave Prince Hans in charge!" },
+      { char: "HANS", text: "Wait! I don't want you getting hurt. How do you know you can trust her?" },
+      { char: "ANNA", text: "Because she's my sister." },
+      { char: "stage", text: "ANNA rushes off after ELSA." },
+    ]
+  },
+  {
+    id: "leading-arendelle",
+    title: "Leading Arendelle",
+    act: 1,
+    sceneNum: "Act I, Scene 10",
+    location: "Castle Courtyard",
+    description: "Hans takes charge, distributes blankets, and stands up to Weselton.",
+    lines: [
+      { char: "WESELTON", text: "I can't handle all of this snow!" },
+      { char: "stage", text: "Two GUARDS carry blankets. HANS moves through the courtyard distributing blankets." },
+      { char: "HANS", text: "Blanket. Who needs a blanket?" },
+      { char: "stage", text: "WESELTON goes to grab one as HANS turns the other way." },
+      { char: "HANS", text: "The castle is open. You're welcome inside. There's plenty of hot glugg." },
+      { char: "TOWNSPERSON", text: "Sir, has there been word of the Queen or Princess?" },
+      { char: "HANS", text: "Not yet." },
+      { char: "TOWNSPERSON", text: "Do you think the Queen means to hurt us?" },
+      { char: "WESELTON", text: "Of course she does!" },
+      { char: "stage", text: "WESELTON takes a blanket from HANS. And another." },
+      { char: "HANS", text: "No. Princess Anna has faith in the Queen, and I trust Anna's judgment fully." },
+      { char: "WESELTON", text: "I bet your Princess Anna is in on this, too. Think about it: two women living alone behind locked gates in secrecy for over a decade. And then on Coronation Day, the Queen unleashes a deadly, dark magic on her own people." },
+      { char: "HANS", text: "You're frightening them." },
+      { char: "WESELTON", text: "They should be frightened. Everyone knows nothing good can come from magic, especially in the hands of a woman." },
+      { char: "HANS", text: "Do not listen to this man's ignorance." },
+      { char: "WESELTON", text: "I'm not a man. I'm a Duke!" },
+      { char: "HANS", text: "Well, I am a Prince, who is in charge of Arendelle, and I will not hesitate to protect it from treason!" },
+      { char: "WESELTON", text: "Treason?!" },
+      { char: "TOWNSPERSON", text: "My Lord, this was found at the base of the North Mountain." },
+      { char: "stage", text: "He holds up Anna's dress, frozen and in tatters." },
+      { char: "HANS", text: "Anna." },
+      { char: "HANS", text: "Princess Anna is in trouble. Please, I need volunteers to go with me to find her!" },
+      { char: "WESELTON", text: "It's a trap." },
+      { char: "HANS", text: "(to WESELTON) Enough!" },
+    ]
+  },
+  {
+    id: "southern-isles-reprise",
+    title: "Hans of the Southern Isles (Reprise)",
+    act: 1,
+    sceneNum: "Act I, Scene 10",
+    location: "Castle Courtyard",
+    description: "Hans rallies the townspeople to join his search party.",
+    isSong: true,
+    songNumber: "#10B",
+    lines: [
+      { char: "HANS", text: "(to the TOWNSPEOPLE) Please... What the Queen's motivations are, I cannot say. But I can assure you Anna is pure and noble." },
+      { char: "WESELTON", text: "Why should we listen to you?!" },
+      { char: "HANS", text: "I'M ONLY THE THIRTEENTH SON OF A KING\nNOR AM I YOUR LEADER, ONLY HER FIANCE\nBUT MY LOVE FOR HER HAS MADE SOMETHING CLEAR:\nWE CAN'T GIVE IN TO FEAR\nNOT HERE, NOT TODAY\nWE CAN'T KNOW HOW THREATENING\nTHE ROAD AHEAD WILL BE\nBUT PUT YOUR FAITH IN ANNA\nTHE WAY THAT ANNA PUT HER FAITH IN ME\nI CAN'T TELL YOU WHAT YOUR PRINCESS SEES IN ME\nBUT LET ME TELL YOU WHAT AN HONOR IT WOULD BE\nIF YOU COULD LET ME LEAD YOU THROUGH THIS TIME OF TRIALS\nYOU ASK FOR A LEADER, A SERVANT RESPONDS\nTRUST HANS OF THE SOUTHERN ISLES", song: true },
+      { char: "TOWNSPERSON", text: "But what of the cold?" },
+      { char: "TOWNSPERSON", text: "What of the Queen?" },
+      { char: "TOWNSPERSON", text: "What if she really is a monster?" },
+      { char: "HANS", text: "Then she will be dealt with, and Anna and I will lead you back to summer!" },
+      { char: "TOWNSPEOPLE", text: "YOU'RE MORE THAN THE THIRTEENTH SON OF A KING / WE'RE LUCKY YOU CAME ALONG IN OUR TIME OF NEED / WE'LL NEVER GIVE IN TO FEAR OR TO TREASON / LET'S LISTEN TO REASON / AND FOLLOW HIS LEAD", song: true },
+      { char: "HANS", text: "WHO WILL COME WITH ME?", song: true },
+      { char: "WESELTON", text: "My men and I, my lord!\nYES, WESELTON ARISES\nAND OFFERS UP THE POWER OF HIS SWORD", song: true },
+      { char: "HANS", text: "I CALL TO YOUR KINGDOM", song: true },
+      { char: "TOWNSPEOPLE", text: "OUR KINGDOM RESPONDS\nTO HANS (TO HANS!)\nFOLLOW HANS (IT'S HANS!)", song: true },
+      { char: "BOTH", text: "PRINCE HANS OF THE SOUTHERN ISLES!", song: true },
+    ]
+  },
+  {
+    id: "mountain-search",
+    title: "End This Winter / Mountain Search",
+    act: 2,
+    sceneNum: "Act II, Scene 5",
+    location: "Mountain Pass",
+    description: "Hans leads the search party through the storm.",
+    lines: [
+      { char: "HANS", text: "Anna! Princess Anna!" },
+      { char: "VOLUNTEERS", text: "END THIS WINTER!", song: true },
+      { char: "WESELTON", text: "The temperature's dropping! At this rate, we won't survive the night!" },
+      { char: "VOLUNTEERS", text: "BRING BACK SUMMER!", song: true },
+      { char: "HANS", text: "Then we must climb faster! Princess Anna is depending on us!" },
+      { char: "VOLUNTEERS", text: "KEEP YOUR STRENGTH UP!", song: true },
+    ]
+  },
+  {
+    id: "monster-scene",
+    title: "Monster (Hans's Line)",
+    act: 2,
+    sceneNum: "Act II, Scene 6",
+    location: "Elsa's Ice Palace",
+    description: "Hans calls out to the volunteers during the approach to Elsa's palace.",
+    lines: [
+      { char: "VOLUNTEERS", text: "END THIS WINTER! BRING BACK SUMMER! KEEP YOUR GUARD UP!", song: true },
+      { char: "HANS", text: "NO HARM COMES TO HER!", note: "(offstage)", song: true },
+      { char: "VOLUNTEERS", text: "END THIS WINTER! BRING BACK SUMMER! KEEP YOUR GUARD UP!", song: true },
+    ]
+  },
+  {
+    id: "elsa-captured",
+    title: "Elsa Is Captured",
+    act: 2,
+    sceneNum: "Act II, Scene 7",
+    location: "Arendelle, Castle Gates",
+    description: "Hans brings Elsa back and interrogates her about Anna.",
+    lines: [
+      { char: "ELSA", text: "I surrender. Take me to Princess Anna." },
+      { char: "WESELTON", text: "Take the monster to trial!" },
+      { char: "HANS", text: "That's enough, Weaseltown." },
+      { char: "WESELTON", text: "It's Weselton. And that is NOT enough. It's getting colder by the second. Look at the Queen: even she shivers." },
+      { char: "ELSA", text: "I'm not cold..." },
+      { char: "HANS", text: "She's scared. So back off." },
+      { char: "HANS", text: "(getting in WESELTON's face) And do not test me anymore. You will lose." },
+      { char: "HANS", text: "(to the GUARDS) Take her in." },
+      { char: "WESELTON", text: "... Why do you protect her?" },
+      { char: "HANS", text: "For Anna." },
+      { char: "ELSA", text: "I need to see Anna." },
+      { char: "HANS", text: "You say she was safe when she left you?" },
+      { char: "ELSA", text: "Yes." },
+      { char: "HANS", text: "And this mountain man with her?" },
+      { char: "ELSA", text: "She said he's helping her." },
+      { char: "HANS", text: "I pray he is. Bring her in." },
+    ]
+  },
+  {
+    id: "the-reveal",
+    title: "The Reveal (Castle Library)",
+    act: 2,
+    sceneNum: "Act II, Scene 8",
+    location: "Castle Library",
+    description: "Hans reveals his true nature to Anna. The villain turn.",
+    evilHans: true,
+    lines: [
+      { char: "stage", text: "HANS bursts in and rushes to ANNA's side. He takes her in his arms." },
+      { char: "HANS", text: "Anna." },
+      { char: "ANNA", text: "Hans. Kiss me. You have to kiss me." },
+      { char: "HANS", text: "What happened out there?" },
+      { char: "ANNA", text: "Elsa struck me with her powers." },
+      { char: "HANS", text: "You said she'd never hurt you." },
+      { char: "ANNA", text: "I was wrong. She froze my heart and only an act of true love can save me." },
+      { char: "HANS", text: "A true love's kiss." },
+      { char: "stage", text: "ANNA nods, leans in for the kiss. But instead, HANS stands, looks down at her pitifully, shaking his head." },
+      { char: "HANS", text: "Oh, Anna. If only there was someone out there who loved you." },
+      { char: "ANNA", text: "What...? You said you did." },
+      { char: "HANS", text: "I lied. As thirteenth in line, I knew I'd have to marry into the throne. You were an obvious target, but who knew Elsa would make this so easy for me? You two have doomed each other... and made me the hero who just tried to help." },
+      { char: "stage", text: "HANS puts out the fire. He kneels before ANNA and takes a ring off his finger." },
+      { char: "HANS", text: "It's worked out well—" },
+    ]
+  },
+  {
+    id: "king-hans",
+    title: "King Hans (Song)",
+    act: 2,
+    sceneNum: "Act II, Scene 8",
+    location: "Castle Library",
+    description: "Hans's villain song—claiming the throne.",
+    evilHans: true,
+    isSong: true,
+    songNumber: "#16C",
+    lines: [
+      { char: "HANS", text: "ONCE I KILL ELSA\nAND GIVE YOU THIS RING", song: true },
+      { char: "stage", text: "He pushes the ring onto her finger then removes the blanket from ANNA's shoulders." },
+      { char: "HANS", text: "I AM KING HANS OF ARENDELLE", song: true },
+      { char: "ANNA", text: "You're no match for Elsa. You won't get away with this." },
+      { char: "HANS", text: "Oh, I already have." },
+      { char: "stage", text: "HANS takes the blanket and locks ANNA in the room, leaving her to die." },
+    ]
+  },
+  {
+    id: "colder-by-the-minute",
+    title: "Colder by the Minute",
+    act: 2,
+    sceneNum: "Act II, Scene 9",
+    location: "Arendelle / Whiteout",
+    description: "Hans announces Anna's 'death,' sentences Elsa, and pursues her in the storm.",
+    evilHans: true,
+    lines: [
+      { char: "stage", text: "A few TOWNSPEOPLE and GUARDS huddle together, freezing. HANS enters." },
+      { char: "HANS", text: "Princess Anna is dead." },
+      { char: "TOWNSPEOPLE", text: "AH OH", song: true },
+      { char: "HANS", text: "She was killed by Queen Elsa." },
+      { char: "TOWNSPEOPLE", text: "AH OH", song: true },
+      { char: "HANS", text: "At least we got to say our marriage vows... before she died in my arms." },
+      { char: "WESELTON", text: "That means you are in charge now. Please, save us from this monster." },
+      { char: "HANS", text: "Bring in the Queen." },
+      { char: "stage", text: "ELSA enters, shackled, led by two GUARDS." },
+      { char: "HANS", text: "I charge Queen Elsa of Arendelle with treason and sentence her to death." },
+      { char: "ELSA", text: "What? No!" },
+      { char: "stage", text: "ELSA breaks free and disappears into the storm. HANS follows." },
+      { char: "HANS", text: "ELSA, LISTEN!", song: true },
+      { char: "HANS", text: "PLEASE SURRENDER!", song: true },
+      { char: "HANS", text: "END THIS WINTER!", song: true },
+      { char: "HANS", text: "AND NO HARM WILL COME TO YOU!", song: true },
+      { char: "HANS", text: "ELSA!", song: true },
+    ]
+  },
+  {
+    id: "confronting-elsa",
+    title: "Confronting Elsa",
+    act: 2,
+    sceneNum: "Act II, Scene 9",
+    location: "The Storm",
+    description: "Hans corners Elsa and tells her Anna is dead.",
+    evilHans: true,
+    lines: [
+      { char: "stage", text: "HANS finds ELSA and corners her." },
+      { char: "HANS", text: "Elsa... you can't run from this!" },
+      { char: "ELSA", text: "Where is my sister? Where is Anna?" },
+      { char: "HANS", text: "Anna?! She returned from the mountain, weak and cold. You froze her heart." },
+      { char: "ELSA", text: "No." },
+      { char: "HANS", text: "I tried to save her, but it was too late. Her skin was ice. Her hair turned white." },
+      { char: "HANS", text: "Your sister is dead... because of you." },
+      { char: "stage", text: "ELSA drops to her knees. The storm suddenly stops." },
+      { char: "stage", text: "HANS draws his sword, holds it over ELSA." },
+    ]
+  },
+  {
+    id: "finale",
+    title: "Finale",
+    act: 2,
+    sceneNum: "Act II, Scene 9",
+    location: "Arendelle",
+    description: "Hans's final line before Anna punches him.",
+    evilHans: true,
+    lines: [
+      { char: "stage", text: "HANS stirs, lightheaded, and tries to get to his feet." },
+      { char: "ANNA", text: "Uh uh uh. Let me handle this." },
+      { char: "stage", text: "ANNA marches over to HANS." },
+      { char: "HANS", text: "(confused) Anna? But she froze your heart." },
+      { char: "ANNA", text: "The only frozen heart around here is yours." },
+      { char: "stage", text: "ANNA punches him right in the face. He goes down and slinks offstage." },
+    ]
+  },
+];
+
+// ============================================================
+// APP STATE
+// ============================================================
+let state = {
+  mode: 'scene-run',
+  currentScene: null,
+  currentLineIndex: 0,
+  streak: 0,
+  totalPracticed: 0,
+  totalCorrect: 0,
+  masteredLines: new Set(),
+  lineConfidence: {}, // lineId -> {hard, good, easy counts}
+  quizIndex: 0,
+  quizResults: [],
+};
+
+// ============================================================
+// CLOUD SYNC (Firebase Realtime Database REST API)
+// ============================================================
+const sync = {
+  url: localStorage.getItem('hans-sync-url') || '',
+  pin: localStorage.getItem('hans-sync-pin') || '',
+  status: 'off',
+};
+
+function isSyncEnabled() {
+  return !!(sync.url && sync.pin);
+}
+
+function updateSyncStatus(status) {
+  sync.status = status;
+  const dot = document.getElementById('sync-dot');
+  const label = document.getElementById('sync-label-text');
+  if (!dot || !label) return;
+  dot.className = 'sync-dot ' + status;
+  if (status === 'off') label.textContent = 'Sync Off';
+  else if (status === 'syncing') label.textContent = 'Syncing…';
+  else if (status === 'synced') label.textContent = 'Synced';
+  else if (status === 'error') label.textContent = 'Sync Error';
+}
+
+let syncTimeout = null;
+function debouncedSync() {
+  clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(syncToFirebase, 800);
+}
+
+async function syncToFirebase() {
+  if (!isSyncEnabled()) return;
+  try {
+    updateSyncStatus('syncing');
+    const data = {
+      streak: state.streak,
+      totalPracticed: state.totalPracticed,
+      totalCorrect: state.totalCorrect,
+      masteredLines: [...state.masteredLines],
+      lineConfidence: state.lineConfidence,
+      lastSync: Date.now(),
+    };
+    const res = await fetch(`${sync.url}/progress/${encodeURIComponent(sync.pin)}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Sync failed');
+    updateSyncStatus('synced');
+  } catch (e) {
+    console.error('Sync error:', e);
+    updateSyncStatus('error');
+  }
+}
+
+async function loadFromFirebase() {
+  if (!isSyncEnabled()) return false;
+  try {
+    updateSyncStatus('syncing');
+    const res = await fetch(`${sync.url}/progress/${encodeURIComponent(sync.pin)}.json`);
+    if (!res.ok) throw new Error('Load failed');
+    const data = await res.json();
+    if (data && data.totalPracticed > state.totalPracticed) {
+      state.streak = data.streak || 0;
+      state.totalPracticed = data.totalPracticed || 0;
+      state.totalCorrect = data.totalCorrect || 0;
+      state.masteredLines = new Set(data.masteredLines || []);
+      state.lineConfidence = data.lineConfidence || {};
+      saveStateLocal();
+      updateStats();
+    }
+    updateSyncStatus('synced');
+    return true;
+  } catch (e) {
+    console.error('Cloud load error:', e);
+    updateSyncStatus('error');
+    return false;
+  }
+}
+
+function openSyncModal() {
+  document.getElementById('sync-url-input').value = sync.url;
+  document.getElementById('sync-pin-input').value = sync.pin;
+  const msgEl = document.getElementById('sync-connected-msg');
+  const disconnectBtn = document.getElementById('disconnect-btn');
+  if (isSyncEnabled()) {
+    msgEl.innerHTML = '<div class="sync-status-msg connected">Connected — progress syncs automatically.</div>';
+    disconnectBtn.style.display = '';
+  } else {
+    msgEl.innerHTML = '<div class="sync-status-msg disconnected">Not connected. Enter your Firebase details below.</div>';
+    disconnectBtn.style.display = 'none';
+  }
+  document.getElementById('sync-overlay').classList.remove('hidden');
+}
+
+function closeSyncModal() {
+  document.getElementById('sync-overlay').classList.add('hidden');
+}
+
+async function connectSync() {
+  let url = document.getElementById('sync-url-input').value.trim().replace(/\/+$/, '');
+  const pin = document.getElementById('sync-pin-input').value.trim();
+  if (!url || !pin) {
+    alert('Please enter both a Firebase URL and a PIN.');
+    return;
+  }
+  if (!url.startsWith('http')) url = 'https://' + url;
+  sync.url = url;
+  sync.pin = pin;
+  localStorage.setItem('hans-sync-url', url);
+  localStorage.setItem('hans-sync-pin', pin);
+  closeSyncModal();
+  const loaded = await loadFromFirebase();
+  if (!loaded || state.totalPracticed > 0) {
+    await syncToFirebase();
+  }
+  render();
+}
+
+function disconnectSync() {
+  sync.url = '';
+  sync.pin = '';
+  localStorage.removeItem('hans-sync-url');
+  localStorage.removeItem('hans-sync-pin');
+  updateSyncStatus('off');
+  closeSyncModal();
+}
+
+// Load saved state
+try {
+  const saved = localStorage.getItem('hans-line-coach');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    state.streak = parsed.streak || 0;
+    state.totalPracticed = parsed.totalPracticed || 0;
+    state.totalCorrect = parsed.totalCorrect || 0;
+    state.masteredLines = new Set(parsed.masteredLines || []);
+    state.lineConfidence = parsed.lineConfidence || {};
+  }
+} catch(e) {}
+
+function saveStateLocal() {
+  localStorage.setItem('hans-line-coach', JSON.stringify({
+    streak: state.streak,
+    totalPracticed: state.totalPracticed,
+    totalCorrect: state.totalCorrect,
+    masteredLines: [...state.masteredLines],
+    lineConfidence: state.lineConfidence,
+  }));
+}
+
+function saveState() {
+  saveStateLocal();
+  debouncedSync();
+}
+
+function updateStats() {
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-mastered').textContent = state.masteredLines.size;
+  document.getElementById('stat-accuracy').textContent =
+    state.totalPracticed > 0
+      ? Math.round((state.totalCorrect / state.totalPracticed) * 100) + '%'
+      : '--%';
+  document.getElementById('stat-total').textContent = state.totalPracticed;
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+function getHansLines(scene) {
+  return scene.lines.filter(l => l.char === 'HANS');
+}
+
+function getAllHansLines() {
+  const lines = [];
+  SCENES.forEach(scene => {
+    scene.lines.forEach((line, idx) => {
+      if (line.char === 'HANS') {
+        lines.push({ ...line, sceneId: scene.id, sceneTitle: scene.title, lineIndex: idx });
+      }
+    });
+  });
+  return lines;
+}
+
+function getLineId(sceneId, lineIndex) {
+  return `${sceneId}-${lineIndex}`;
+}
+
+function charClass(char) {
+  if (char === 'HANS') return 'hans';
+  if (char === 'ANNA') return 'anna';
+  if (char === 'ELSA') return 'elsa';
+  if (char === 'KRISTOFF') return 'kristoff';
+  if (char === 'WESELTON') return 'weselton';
+  if (char === 'BOTH') return 'hans';
+  if (char.includes('TOWNS') || char.includes('VOLUNT')) return 'townspeople';
+  if (char === 'stage') return '';
+  return 'other';
+}
+
+function normalizeText(text) {
+  return text.toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function similarity(a, b) {
+  const aN = normalizeText(a);
+  const bN = normalizeText(b);
+  if (aN === bN) return 1;
+
+  const aWords = aN.split(' ');
+  const bWords = bN.split(' ');
+
+  let matches = 0;
+  const bUsed = new Set();
+  aWords.forEach(aw => {
+    const idx = bWords.findIndex((bw, i) => !bUsed.has(i) && bw === aw);
+    if (idx !== -1) {
+      matches++;
+      bUsed.add(idx);
+    }
+  });
+
+  const maxLen = Math.max(aWords.length, bWords.length);
+  return maxLen === 0 ? 1 : matches / maxLen;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ============================================================
+// SNOWFLAKES
+// ============================================================
+function createSnowflakes() {
+  const container = document.getElementById('snowflakes');
+  const flakes = ['*', '+', '.'];
+  for (let i = 0; i < 30; i++) {
+    const flake = document.createElement('div');
+    flake.className = 'snowflake';
+    flake.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+    flake.style.left = Math.random() * 100 + '%';
+    flake.style.animationDuration = (5 + Math.random() * 10) + 's';
+    flake.style.animationDelay = Math.random() * 10 + 's';
+    flake.style.fontSize = (0.5 + Math.random() * 1) + 'em';
+    container.appendChild(flake);
+  }
+}
+createSnowflakes();
+
+// ============================================================
+// NAV
+// ============================================================
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.mode = btn.dataset.mode;
+    state.currentScene = null;
+    render();
+  });
+});
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+function render() {
+  updateStats();
+  const main = document.getElementById('main-content');
+
+  switch (state.mode) {
+    case 'scene-run': renderSceneRun(main); break;
+    case 'cue-response': renderCueResponse(main); break;
+    case 'type-it': renderTypeIt(main); break;
+    case 'quiz': renderQuiz(main); break;
+    case 'full-script': renderFullScript(main); break;
+  }
+}
+
+// ---- SCENE SELECT ----
+function renderSceneSelect(main, mode) {
+  let html = `<div class="card animate-in">
+    <h2 style="font-weight: 800; margin-bottom: 0.5rem;">Choose a Scene</h2>
+    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Select which scene to practice.</p>
+    <div class="scene-select">`;
+
+  SCENES.forEach(scene => {
+    const hansCount = getHansLines(scene).length;
+    const jointCount = scene.lines.filter(l => l.char === 'BOTH').length;
+    html += `<div class="scene-card" onclick="selectScene('${scene.id}', '${mode}')">
+      <h3>${scene.title}</h3>
+      <p>${scene.sceneNum} — ${scene.location}</p>
+      <p>${scene.description}</p>
+      <div class="line-count">${hansCount} Hans line${hansCount !== 1 ? 's' : ''}${jointCount ? ` + ${jointCount} joint` : ''}${scene.isSong ? ' | Song' : ''}</div>
+    </div>`;
+  });
+
+  html += `</div>
+    <div class="btn-group" style="justify-content: center; margin-top: 1.5rem;">
+      <button class="btn btn-secondary" onclick="selectScene('all', '${mode}')">All Scenes (Full Run)</button>
+    </div>
+  </div>`;
+  main.innerHTML = html;
+}
+
+function selectScene(sceneId, mode) {
+  if (sceneId === 'all') {
+    state.currentScene = 'all';
+  } else {
+    state.currentScene = sceneId;
+  }
+  state.currentLineIndex = 0;
+  state.quizIndex = 0;
+  state.quizResults = [];
+  render();
+}
+
+// ---- SCENE RUN MODE ----
+function renderSceneRun(main) {
+  if (!state.currentScene) {
+    renderSceneSelect(main, 'scene-run');
+    return;
+  }
+
+  const scenes = state.currentScene === 'all'
+    ? SCENES
+    : SCENES.filter(s => s.id === state.currentScene);
+
+  let html = `<div class="btn-group" style="margin-bottom: 1rem;">
+    <button class="btn btn-secondary" onclick="state.currentScene = null; render();">Back to Scenes</button>
+  </div>`;
+
+  scenes.forEach(scene => {
+    html += `<div class="card animate-in scene-run-container" id="scene-${scene.id}">
+      <div class="scene-label">${scene.sceneNum} — ${scene.location}${scene.isSong ? ' | ' + scene.songNumber : ''}</div>
+      <h2 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.75rem;">${scene.title}</h2>`;
+
+    const evil = !!scene.evilHans;
+    scene.lines.forEach((line, idx) => {
+      const lineId = getLineId(scene.id, idx);
+      const isHans = line.char === 'HANS';
+      const isBoth = line.char === 'BOTH';
+      const isStage = line.char === 'stage';
+      const hansClass = evil ? 'hans-evil' : 'hans';
+
+      if (isStage) {
+        html += `<div class="stage-direction">${escapeHtml(line.text)}</div>`;
+      } else if (isHans || isBoth) {
+        html += `<div class="dialogue-card">`;
+        html += `<div class="char-tag ${hansClass}">${line.char}${line.note ? ' ' + line.note : ''}</div>`;
+        html += `<div class="hidden-line${evil ? ' evil-scene' : ''}" id="line-${lineId}" onclick="revealLine('${lineId}', this, ${evil})">
+          <span class="prompt-text">Tap to reveal your line</span>
+          <span class="actual-line" style="display:none">${escapeHtml(line.text).replace(/\n/g, '<br>')}</span>
+        </div>`;
+        html += `</div>`;
+      } else {
+        html += `<div class="dialogue-card">`;
+        html += `<div class="char-tag ${charClass(line.char)}">${line.char}${line.note ? ' ' + line.note : ''}</div>`;
+        html += `<div class="dialogue-line cue${line.song ? ' song' : ''}">${escapeHtml(line.text).replace(/\n/g, '<br>')}</div>`;
+        html += `</div>`;
+      }
+    });
+
+    html += `</div>`;
+  });
+
+  main.innerHTML = html;
+}
+
+function revealLine(lineId, el, isEvil) {
+  if (el.classList.contains('revealed')) return;
+  el.classList.add('revealed');
+  if (isEvil) el.classList.add('evil');
+  el.querySelector('.prompt-text').style.display = 'none';
+  el.querySelector('.actual-line').style.display = 'block';
+}
+
+// ---- CUE & RESPONSE MODE ----
+function renderCueResponse(main) {
+  if (!state.currentScene) {
+    renderSceneSelect(main, 'cue-response');
+    return;
+  }
+
+  const scenes = state.currentScene === 'all'
+    ? SCENES
+    : SCENES.filter(s => s.id === state.currentScene);
+
+  // Build cue-response pairs
+  const pairs = [];
+  scenes.forEach(scene => {
+    for (let i = 0; i < scene.lines.length; i++) {
+      const line = scene.lines[i];
+      if (line.char === 'HANS' || line.char === 'BOTH') {
+        // Find preceding cue
+        let cue = null;
+        for (let j = i - 1; j >= 0; j--) {
+          if (scene.lines[j].char !== 'stage' && scene.lines[j].char !== 'HANS') {
+            cue = scene.lines[j];
+            break;
+          } else if (scene.lines[j].char === 'stage') {
+            cue = scene.lines[j];
+            break;
+          }
+        }
+        pairs.push({
+          cue,
+          response: line,
+          sceneId: scene.id,
+          sceneTitle: scene.title,
+          sceneNum: scene.sceneNum,
+          lineIndex: i,
+          evil: !!scene.evilHans,
+        });
+      }
+    }
+  });
+
+  if (pairs.length === 0) {
+    main.innerHTML = `<div class="card"><p>No Hans lines in this scene.</p></div>`;
+    return;
+  }
+
+  const idx = state.currentLineIndex % pairs.length;
+  const pair = pairs[idx];
+  const lineId = getLineId(pair.sceneId, pair.lineIndex);
+  const revealed = document.querySelector(`#cue-card.revealed`) !== null;
+
+  let html = `<div class="btn-group" style="margin-bottom: 1rem;">
+    <button class="btn btn-secondary" onclick="state.currentScene = null; render();">Back to Scenes</button>
+  </div>`;
+
+  // Progress
+  html += `<div class="progress-dots">`;
+  for (let i = 0; i < Math.min(pairs.length, 40); i++) {
+    const cls = i === idx ? 'current' : (i < idx ? 'correct' : '');
+    html += `<div class="dot ${cls}"></div>`;
+  }
+  html += `</div>`;
+
+  html += `<div class="score-display">
+    <span style="font-size:0.8rem; color:var(--text-muted);">${idx + 1}/${pairs.length}</span>
+    <div class="score-bar"><div class="score-fill" style="width:${(idx/pairs.length)*100}%"></div></div>
+  </div>`;
+
+  html += `<div class="card animate-in" id="cue-card">
+    <div class="scene-label">${pair.sceneNum} — ${pair.sceneTitle}</div>`;
+
+  if (pair.cue) {
+    if (pair.cue.char === 'stage') {
+      html += `<div class="stage-direction">${escapeHtml(pair.cue.text)}</div>`;
+    } else {
+      html += `<div class="dialogue-card">`;
+      html += `<div class="char-tag ${charClass(pair.cue.char)}">${pair.cue.char}</div>`;
+      html += `<div class="dialogue-line cue${pair.cue.song ? ' song' : ''}">${escapeHtml(pair.cue.text).replace(/\n/g, '<br>')}</div>`;
+      html += `</div>`;
+    }
+  } else {
+    html += `<div class="stage-direction">[ Scene opens — Hans speaks first ]</div>`;
+  }
+
+  const hansTag = pair.evil ? 'hans-evil' : 'hans';
+  html += `<div class="dialogue-card" style="margin-top: 1rem;">
+    <div class="char-tag ${hansTag}">${pair.response.char}${pair.response.note ? ' ' + pair.response.note : ''}</div>
+    <div class="hidden-line" id="cue-response-line" data-evil="${pair.evil}" onclick="revealCueLine()">
+      <span class="prompt-text">What does Hans say? (tap or press Space)</span>
+      <span class="actual-line" style="display:none">${escapeHtml(pair.response.text).replace(/\n/g, '<br>')}</span>
+    </div>
+  </div>`;
+
+  html += `<div id="confidence-section" style="display:none">
+    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:1rem;">How well did you know this?</p>
+    <div class="confidence-btns">
+      <button class="conf-btn hard" onclick="rateConfidence('${lineId}', 'hard')">Again<br><small>Didn't know</small></button>
+      <button class="conf-btn medium" onclick="rateConfidence('${lineId}', 'good')">Good<br><small>Got it</small></button>
+      <button class="conf-btn easy" onclick="rateConfidence('${lineId}', 'easy')">Easy<br><small>Nailed it</small></button>
+    </div>
+    <div class="keyboard-hint"><kbd>1</kbd> Again &nbsp; <kbd>2</kbd> Good &nbsp; <kbd>3</kbd> Easy</div>
+  </div>`;
+
+  html += `</div>`;
+  main.innerHTML = html;
+}
+
+function revealCueLine() {
+  const el = document.getElementById('cue-response-line');
+  if (el.classList.contains('revealed')) return;
+  el.classList.add('revealed');
+  if (el.dataset.evil === 'true') el.classList.add('evil');
+  el.querySelector('.prompt-text').style.display = 'none';
+  el.querySelector('.actual-line').style.display = 'block';
+  document.getElementById('confidence-section').style.display = 'block';
+}
+
+function rateConfidence(lineId, rating) {
+  if (!state.lineConfidence[lineId]) {
+    state.lineConfidence[lineId] = { hard: 0, good: 0, easy: 0 };
+  }
+  state.lineConfidence[lineId][rating]++;
+  state.totalPracticed++;
+
+  if (rating === 'easy') {
+    state.totalCorrect++;
+    state.streak++;
+    if (state.lineConfidence[lineId].easy >= 3) {
+      state.masteredLines.add(lineId);
+    }
+  } else if (rating === 'good') {
+    state.totalCorrect++;
+    state.streak++;
+  } else {
+    state.streak = 0;
+  }
+
+  saveState();
+  state.currentLineIndex++;
+  render();
+}
+
+// ---- TYPE IT MODE ----
+function renderTypeIt(main) {
+  if (!state.currentScene) {
+    renderSceneSelect(main, 'type-it');
+    return;
+  }
+
+  const scenes = state.currentScene === 'all'
+    ? SCENES
+    : SCENES.filter(s => s.id === state.currentScene);
+
+  const pairs = [];
+  scenes.forEach(scene => {
+    for (let i = 0; i < scene.lines.length; i++) {
+      const line = scene.lines[i];
+      if (line.char === 'HANS') {
+        let cue = null;
+        for (let j = i - 1; j >= 0; j--) {
+          if (scene.lines[j].char !== 'stage' && scene.lines[j].char !== 'HANS') {
+            cue = scene.lines[j];
+            break;
+          } else if (scene.lines[j].char === 'stage') {
+            cue = scene.lines[j];
+            break;
+          }
+        }
+        pairs.push({
+          cue,
+          response: line,
+          sceneId: scene.id,
+          sceneTitle: scene.title,
+          sceneNum: scene.sceneNum,
+          lineIndex: i,
+          evil: !!scene.evilHans,
+        });
+      }
+    }
+  });
+
+  if (pairs.length === 0) {
+    main.innerHTML = `<div class="card"><p>No Hans lines to type.</p></div>`;
+    return;
+  }
+
+  const idx = state.currentLineIndex % pairs.length;
+  const pair = pairs[idx];
+  const lineId = getLineId(pair.sceneId, pair.lineIndex);
+
+  let html = `<div class="btn-group" style="margin-bottom: 1rem;">
+    <button class="btn btn-secondary" onclick="state.currentScene = null; render();">Back to Scenes</button>
+  </div>`;
+
+  html += `<div class="progress-dots">`;
+  for (let i = 0; i < Math.min(pairs.length, 40); i++) {
+    const cls = i === idx ? 'current' : (i < idx ? 'correct' : '');
+    html += `<div class="dot ${cls}"></div>`;
+  }
+  html += `</div>`;
+
+  html += `<div class="card animate-in">
+    <div class="scene-label">${pair.sceneNum} — ${pair.sceneTitle}</div>`;
+
+  if (pair.cue) {
+    if (pair.cue.char === 'stage') {
+      html += `<div class="stage-direction">${escapeHtml(pair.cue.text)}</div>`;
+    } else {
+      html += `<div class="dialogue-card">`;
+      html += `<div class="char-tag ${charClass(pair.cue.char)}">${pair.cue.char}</div>`;
+      html += `<div class="dialogue-line cue${pair.cue.song ? ' song' : ''}">${escapeHtml(pair.cue.text).replace(/\n/g, '<br>')}</div>`;
+      html += `</div>`;
+    }
+  }
+
+  html += `<div class="dialogue-card" style="margin-top: 1rem;">
+    <div class="char-tag ${pair.evil ? 'hans-evil' : 'hans'}">HANS${pair.response.song ? ' (singing)' : ''}</div>
+    <textarea class="line-input" id="type-input" placeholder="Type Hans's line from memory..." rows="3"></textarea>
+  </div>`;
+
+  html += `<div class="btn-group">
+    <button class="btn btn-primary" id="check-btn" onclick="checkTypedLine('${lineId}', ${JSON.stringify(pair.response.text).replace(/'/g, "\\'")})">Check</button>
+    <button class="btn btn-secondary" onclick="showTypedAnswer('${lineId}')">Show Answer</button>
+    <button class="btn btn-secondary" onclick="state.currentLineIndex++; render();">Skip</button>
+  </div>`;
+
+  html += `<div id="type-feedback"></div>`;
+  html += `</div>`;
+
+  main.innerHTML = html;
+
+  setTimeout(() => {
+    const input = document.getElementById('type-input');
+    if (input) input.focus();
+  }, 100);
+}
+
+function checkTypedLine(lineId, correctText) {
+  const input = document.getElementById('type-input');
+  const typed = input.value.trim();
+  if (!typed) return;
+
+  const sim = similarity(typed, correctText);
+  const feedbackEl = document.getElementById('type-feedback');
+
+  state.totalPracticed++;
+  let cls, msg;
+
+  if (sim >= 0.9) {
+    cls = 'great';
+    msg = 'Excellent! Nearly perfect!';
+    input.classList.add('correct');
+    state.totalCorrect++;
+    state.streak++;
+    if (!state.lineConfidence[lineId]) state.lineConfidence[lineId] = { hard: 0, good: 0, easy: 0 };
+    state.lineConfidence[lineId].easy++;
+    if (state.lineConfidence[lineId].easy >= 3) state.masteredLines.add(lineId);
+  } else if (sim >= 0.6) {
+    cls = 'good';
+    msg = 'Good! You got the gist. A few details off.';
+    input.classList.add('correct');
+    state.totalCorrect++;
+    state.streak++;
+  } else {
+    cls = 'needs-work';
+    msg = 'Keep practicing this one.';
+    input.classList.add('incorrect');
+    state.streak = 0;
+  }
+
+  feedbackEl.innerHTML = `
+    <div class="similarity-feedback ${cls}" style="margin-top:1rem;">
+      <strong>${msg}</strong> (${Math.round(sim * 100)}% match)
+    </div>
+    <div class="dialogue-card" style="margin-top: 0.75rem;">
+      <div class="char-tag hans">Correct Line</div>
+      <div class="dialogue-line hans-line">${escapeHtml(correctText).replace(/\n/g, '<br>')}</div>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="state.currentLineIndex++; render();">Next</button>
+    </div>
+  `;
+
+  document.getElementById('check-btn').disabled = true;
+  input.disabled = true;
+  saveState();
+  updateStats();
+}
+
+function showTypedAnswer(lineId) {
+  const pairs = [];
+  const scenes = state.currentScene === 'all' ? SCENES : SCENES.filter(s => s.id === state.currentScene);
+  scenes.forEach(scene => {
+    scene.lines.forEach((line, i) => {
+      if (line.char === 'HANS') pairs.push({ response: line, sceneId: scene.id, lineIndex: i });
+    });
+  });
+  const idx = state.currentLineIndex % pairs.length;
+  const pair = pairs[idx];
+
+  const feedbackEl = document.getElementById('type-feedback');
+  feedbackEl.innerHTML = `
+    <div class="dialogue-card" style="margin-top: 0.75rem;">
+      <div class="char-tag hans">Answer</div>
+      <div class="dialogue-line hans-line">${escapeHtml(pair.response.text).replace(/\n/g, '<br>')}</div>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="state.currentLineIndex++; render();">Next</button>
+    </div>
+  `;
+}
+
+// ---- QUIZ MODE ----
+function renderQuiz(main) {
+  if (!state.currentScene) {
+    renderSceneSelect(main, 'quiz');
+    return;
+  }
+
+  const allHans = getAllHansLines();
+  const scenes = state.currentScene === 'all'
+    ? SCENES
+    : SCENES.filter(s => s.id === state.currentScene);
+
+  // Build quiz questions from Hans lines in selected scenes
+  const questions = [];
+  scenes.forEach(scene => {
+    for (let i = 0; i < scene.lines.length; i++) {
+      const line = scene.lines[i];
+      if (line.char === 'HANS' && line.text.length > 15) {
+        let cue = null;
+        for (let j = i - 1; j >= 0; j--) {
+          if (scene.lines[j].char !== 'stage' && scene.lines[j].char !== 'HANS') {
+            cue = scene.lines[j];
+            break;
+          }
+        }
+        if (cue) {
+          // Get wrong answers from other Hans lines
+          const wrongs = allHans
+            .filter(h => h.text !== line.text && h.text.length > 10)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3)
+            .map(h => h.text);
+
+          if (wrongs.length >= 2) {
+            questions.push({
+              cue,
+              correct: line.text,
+              options: shuffle([line.text, ...wrongs.slice(0, 3)]),
+              sceneTitle: scene.title,
+              sceneNum: scene.sceneNum,
+              sceneId: scene.id,
+              lineIndex: i,
+            });
+          }
+        }
+      }
+    }
+  });
+
+  if (questions.length === 0) {
+    main.innerHTML = `<div class="card"><p>Not enough Hans lines in this scene for a quiz. Try "All Scenes."</p></div>`;
+    return;
+  }
+
+  const idx = state.quizIndex % questions.length;
+  const q = questions[idx];
+
+  let html = `<div class="btn-group" style="margin-bottom: 1rem;">
+    <button class="btn btn-secondary" onclick="state.currentScene = null; state.quizIndex = 0; render();">Back to Scenes</button>
+  </div>`;
+
+  html += `<div class="progress-dots">`;
+  for (let i = 0; i < Math.min(questions.length, 30); i++) {
+    let cls = '';
+    if (i === idx) cls = 'current';
+    else if (state.quizResults[i] === true) cls = 'correct';
+    else if (state.quizResults[i] === false) cls = 'wrong';
+    html += `<div class="dot ${cls}"></div>`;
+  }
+  html += `</div>`;
+
+  html += `<div class="card animate-in">
+    <div class="scene-label">${q.sceneNum} — ${q.sceneTitle}</div>
+    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">What does Hans say next?</p>`;
+
+  html += `<div class="dialogue-card">`;
+  html += `<div class="char-tag ${charClass(q.cue.char)}">${q.cue.char}</div>`;
+  html += `<div class="dialogue-line cue">${escapeHtml(q.cue.text).replace(/\n/g, '<br>')}</div>`;
+  html += `</div>`;
+
+  html += `<div style="margin-top:1rem;">`;
+  q.options.forEach((opt, oi) => {
+    const truncated = opt.length > 120 ? opt.substring(0, 120) + '...' : opt;
+    html += `<div class="mc-option" id="mc-${oi}" onclick="selectQuizOption(${oi}, ${JSON.stringify(opt === q.correct)}, '${q.sceneId}', ${q.lineIndex})">${escapeHtml(truncated).replace(/\n/g, ' / ')}</div>`;
+  });
+  html += `</div>`;
+
+  html += `<div id="quiz-feedback"></div>`;
+  html += `</div>`;
+
+  main.innerHTML = html;
+}
+
+function selectQuizOption(optionIndex, isCorrect, sceneId, lineIndex) {
+  // Prevent double-clicking
+  if (document.querySelector('.mc-option.selected-correct, .mc-option.selected-wrong')) return;
+
+  const el = document.getElementById(`mc-${optionIndex}`);
+  const lineId = getLineId(sceneId, lineIndex);
+
+  state.totalPracticed++;
+
+  if (isCorrect) {
+    el.classList.add('selected-correct');
+    state.totalCorrect++;
+    state.streak++;
+    state.quizResults[state.quizIndex] = true;
+    if (!state.lineConfidence[lineId]) state.lineConfidence[lineId] = { hard: 0, good: 0, easy: 0 };
+    state.lineConfidence[lineId].good++;
+  } else {
+    el.classList.add('selected-wrong');
+    state.streak = 0;
+    state.quizResults[state.quizIndex] = false;
+    // Highlight correct
+    document.querySelectorAll('.mc-option').forEach((opt, i) => {
+      // We need to check which is correct - hacky but works
+    });
+  }
+
+  saveState();
+  updateStats();
+
+  document.getElementById('quiz-feedback').innerHTML = `
+    <div class="btn-group" style="justify-content:center">
+      <button class="btn btn-primary" onclick="state.quizIndex++; render();">Next</button>
+    </div>
+  `;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ---- FULL SCRIPT MODE ----
+function renderFullScript(main) {
+  let html = `<div class="card" style="text-align:center; margin-bottom:1rem;">
+    <p style="color:var(--text-muted); font-size:0.85rem;">All Hans scenes with lines highlighted. Use this as a reference while studying.</p>
+  </div>`;
+
+  SCENES.forEach(scene => {
+    html += `<div class="card">
+      <div class="scene-label">${scene.sceneNum} — ${scene.location}${scene.isSong ? ' | Song' : ''}</div>
+      <h2 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.25rem;">${scene.title}</h2>
+      <p style="color: var(--text-muted); font-size: 0.8125rem; margin-bottom: 1rem;">${scene.description}</p>`;
+
+    const evil = !!scene.evilHans;
+    scene.lines.forEach(line => {
+      if (line.char === 'stage') {
+        html += `<div class="stage-direction">${escapeHtml(line.text)}</div>`;
+      } else {
+        const isHans = line.char === 'HANS' || line.char === 'BOTH';
+        const tagClass = isHans ? (evil ? 'hans-evil' : 'hans') : charClass(line.char);
+        const lineClass = isHans ? (evil ? 'hans-evil-line' : 'hans-line') : 'cue';
+        html += `<div class="dialogue-card">`;
+        html += `<div class="char-tag ${tagClass}">${line.char}${line.note ? ' ' + line.note : ''}</div>`;
+        html += `<div class="dialogue-line ${lineClass}${line.song ? ' song' : ''}">${escapeHtml(line.text).replace(/\n/g, '<br>')}</div>`;
+        html += `</div>`;
+      }
+    });
+
+    html += `</div>`;
+  });
+
+  main.innerHTML = html;
+}
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+    if (e.key === 'Enter' && !e.shiftKey && state.mode === 'type-it') {
+      e.preventDefault();
+      const checkBtn = document.getElementById('check-btn');
+      if (checkBtn && !checkBtn.disabled) checkBtn.click();
+    }
+    return;
+  }
+
+  if (e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    if (state.mode === 'cue-response') {
+      const el = document.getElementById('cue-response-line');
+      if (el && !el.classList.contains('revealed')) {
+        revealCueLine();
+      }
+    }
+  }
+
+  if (e.key === '1' && state.mode === 'cue-response') {
+    const btn = document.querySelector('.conf-btn.hard');
+    if (btn) btn.click();
+  }
+  if (e.key === '2' && state.mode === 'cue-response') {
+    const btn = document.querySelector('.conf-btn.medium');
+    if (btn) btn.click();
+  }
+  if (e.key === '3' && state.mode === 'cue-response') {
+    const btn = document.querySelector('.conf-btn.easy');
+    if (btn) btn.click();
+  }
+
+  if (e.key === '?' || (e.key === '/' && e.shiftKey)) {
+    document.getElementById('help-overlay').classList.toggle('hidden');
+  }
+
+  if (e.key === 'Escape') {
+    document.getElementById('help-overlay').classList.add('hidden');
+    document.getElementById('sync-overlay').classList.add('hidden');
+  }
+});
+
+// ============================================================
+// INITIAL RENDER
+// ============================================================
+render();
+if (isSyncEnabled()) {
+  loadFromFirebase().then(() => { render(); updateStats(); });
+} else {
+  updateSyncStatus('off');
+}
+</script>
+</body>
+</html>
