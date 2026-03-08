@@ -51,15 +51,26 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html {
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+  }
+
   body {
     font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
+    overscroll-behavior: none;
     -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
     font-size: 16px;
     line-height: 1.5;
+  }
+
+  body.no-scroll {
+    overflow: hidden;
   }
 
   /* Snowflakes hidden */
@@ -606,15 +617,176 @@
   .diff-word.wrong { color: var(--danger); text-decoration: line-through; }
   .diff-word.missing { color: var(--warning); }
 
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    position: absolute;
+    left: 0.75rem;
+    top: 2.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 5;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--black);
+    border-radius: 1px;
+    transition: transform 0.3s cubic-bezier(.32,.72,0,1), opacity 0.2s;
+    transform-origin: center;
+  }
+
+  .hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(3px, 3px);
+  }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(3px, -3px);
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    background: var(--bg-card);
+    z-index: 200;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.38s cubic-bezier(.32,.72,0,1);
+    will-change: transform;
+    border-right: 1px solid var(--border);
+    padding: 2.5rem 1.5rem 2rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar.open {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .sidebar.gesture {
+    transition: none;
+  }
+
+  .sidebar h2 {
+    font-size: 1.125rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.15rem;
+  }
+
+  .sidebar-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-nav-item {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 0.875rem;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: left;
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: background 0.15s, color 0.15s, transform 0.15s;
+    margin-bottom: 2px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sidebar-nav-item:active {
+    transform: scale(0.97);
+  }
+
+  .sidebar-nav-item.active {
+    background: var(--black);
+    color: var(--white-strong);
+    font-weight: 700;
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1rem 0;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: background 0.15s, color 0.15s;
+    background: none;
+    border: none;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sidebar-link:active { background: var(--bg-subtle); color: var(--text); }
+
+  /* Sidebar backdrop */
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    z-index: 190;
+    pointer-events: none;
+    transition: background 0.38s cubic-bezier(.32,.72,0,1);
+    will-change: background;
+  }
+
+  .sidebar-backdrop.visible {
+    background: rgba(0, 0, 0, 0.35);
+    pointer-events: auto;
+  }
+
+  .sidebar-backdrop.gesture {
+    transition: none;
+  }
+
+  /* Tactile press states */
+  .btn:active { transform: scale(0.97); }
+  .scene-card:active { transform: scale(0.98); }
+  .hidden-line:not(.revealed):active { transform: scale(0.98); }
+  .mc-option:active { transform: scale(0.98); }
+  .conf-btn:active { transform: scale(0.96); }
+  .nav-btn:active { transform: scale(0.96); }
+
   /* Responsive */
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+    .nav { display: none; }
+  }
+
   @media (max-width: 600px) {
     .header h1 { font-size: 1.75rem; }
     .header { padding: 1.75rem 1rem 0.5rem; }
+    .hamburger { top: 1.5rem; left: 0.5rem; }
     .card { padding: 1.25rem; border-radius: var(--radius); }
     .stats-bar { margin: 0 1rem; padding: 0.5rem 0.75rem; }
     .stat-value { font-size: 1.1rem; }
-    .nav { gap: 2px; padding: 0.5rem 1rem; }
-    .nav-btn { padding: 0.5rem 0.75rem; font-size: 0.78rem; }
     .main { padding: 0.5rem 1rem 3rem; }
     .scene-select { grid-template-columns: 1fr; }
   }
@@ -815,9 +987,26 @@
 </head>
 <body>
 
+<div class="sidebar" id="sidebar">
+  <h2>Hans Line Coach</h2>
+  <div class="sidebar-subtitle">Prince Hans of the Southern Isles</div>
+  <button class="sidebar-nav-item active" data-mode="scene-run" onclick="switchMode('scene-run')">Scene Run</button>
+  <button class="sidebar-nav-item" data-mode="cue-response" onclick="switchMode('cue-response')">Cue & Response</button>
+  <button class="sidebar-nav-item" data-mode="type-it" onclick="switchMode('type-it')">Type It</button>
+  <button class="sidebar-nav-item" data-mode="quiz" onclick="switchMode('quiz')">Quiz</button>
+  <button class="sidebar-nav-item" data-mode="full-script" onclick="switchMode('full-script')">Full Script</button>
+  <div class="sidebar-divider"></div>
+  <button class="sidebar-link" onclick="openSyncModal(); setSidebar(false);">Cloud Sync</button>
+  <button class="sidebar-link" onclick="document.getElementById('help-overlay').classList.remove('hidden'); setSidebar(false);">Help & Shortcuts</button>
+</div>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="setSidebar(false)"></div>
+
 <div class="snowflakes" id="snowflakes"></div>
 
 <div class="header">
+  <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <h1>Hans Line Coach</h1>
   <div class="subtitle">Prince Hans of the Southern Isles</div>
   <button class="sync-btn" id="sync-btn" onclick="openSyncModal()">
@@ -1641,14 +1830,147 @@ createSnowflakes();
 // ============================================================
 // NAV
 // ============================================================
+// ============================================================
+// SIDEBAR & SWIPE GESTURE
+// ============================================================
+const SIDEBAR_W = 280;
+const EDGE_ZONE = 24;
+const SWIPE_THRESHOLD = 0.35;
+
+let sidebarOpen = false;
+const touch = {
+  startX: 0, startY: 0, startTime: 0,
+  lastX: 0, lastTime: 0, vx: 0,
+  tracking: false, fromEdge: false, wasOpen: false,
+};
+
+function isMobile() { return window.innerWidth <= 768; }
+
+function setSidebar(open) {
+  sidebarOpen = open;
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const hamburger = document.getElementById('hamburger');
+
+  sidebar.classList.remove('gesture');
+  backdrop.classList.remove('gesture');
+  sidebar.style.transform = '';
+  backdrop.style.background = '';
+  backdrop.style.pointerEvents = '';
+
+  if (open) {
+    sidebar.classList.add('open');
+    backdrop.classList.add('visible');
+    hamburger.classList.add('open');
+    document.body.classList.add('no-scroll');
+  } else {
+    sidebar.classList.remove('open');
+    backdrop.classList.remove('visible');
+    hamburger.classList.remove('open');
+    document.body.classList.remove('no-scroll');
+  }
+}
+
+function toggleSidebar() { setSidebar(!sidebarOpen); }
+
+function updateSidebarGesture(progress) {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  sidebar.classList.add('gesture');
+  backdrop.classList.add('gesture');
+  sidebar.style.transform = `translate3d(${(progress - 1) * SIDEBAR_W}px, 0, 0)`;
+  backdrop.style.background = `rgba(0, 0, 0, ${progress * 0.35})`;
+  backdrop.style.pointerEvents = progress > 0 ? 'auto' : 'none';
+}
+
+document.addEventListener('touchstart', (e) => {
+  if (!isMobile()) return;
+  const t = e.touches[0];
+  touch.startX = t.clientX;
+  touch.startY = t.clientY;
+  touch.startTime = Date.now();
+  touch.lastX = t.clientX;
+  touch.lastTime = touch.startTime;
+  touch.vx = 0;
+  touch.tracking = false;
+  touch.fromEdge = t.clientX < EDGE_ZONE && !sidebarOpen;
+  touch.wasOpen = sidebarOpen;
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+  if (!isMobile()) return;
+  const t = e.touches[0];
+  const dx = t.clientX - touch.startX;
+  const dy = t.clientY - touch.startY;
+
+  if (!touch.tracking) {
+    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+    if (Math.abs(dy) > Math.abs(dx)) return;
+    if (touch.fromEdge && dx > 0) {
+      touch.tracking = true;
+    } else if (touch.wasOpen && dx < 0) {
+      touch.tracking = true;
+    } else {
+      return;
+    }
+  }
+
+  if (!touch.tracking) return;
+  e.preventDefault();
+
+  const now = Date.now();
+  const dt = now - touch.lastTime;
+  if (dt > 0) touch.vx = (t.clientX - touch.lastX) / dt;
+  touch.lastX = t.clientX;
+  touch.lastTime = now;
+
+  let progress;
+  if (touch.wasOpen) {
+    progress = Math.max(0, Math.min(1, 1 + dx / SIDEBAR_W));
+  } else {
+    progress = Math.max(0, Math.min(1, dx / SIDEBAR_W));
+  }
+  updateSidebarGesture(progress);
+}, { passive: false });
+
+document.addEventListener('touchend', () => {
+  if (!isMobile() || !touch.tracking) return;
+  touch.tracking = false;
+  const dx = touch.lastX - touch.startX;
+  let progress;
+  if (touch.wasOpen) {
+    progress = Math.max(0, Math.min(1, 1 + dx / SIDEBAR_W));
+  } else {
+    progress = Math.max(0, Math.min(1, dx / SIDEBAR_W));
+  }
+  const flick = Math.abs(touch.vx) > 0.4;
+  setSidebar(flick ? touch.vx > 0 : progress > SWIPE_THRESHOLD);
+}, { passive: true });
+
+document.addEventListener('touchcancel', () => {
+  if (!isMobile() || !touch.tracking) return;
+  touch.tracking = false;
+  setSidebar(touch.wasOpen);
+}, { passive: true });
+
+// ============================================================
+// MODE SWITCHING
+// ============================================================
+function switchMode(mode) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const dBtn = document.querySelector(`.nav-btn[data-mode="${mode}"]`);
+  if (dBtn) dBtn.classList.add('active');
+  document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+  const sBtn = document.querySelector(`.sidebar-nav-item[data-mode="${mode}"]`);
+  if (sBtn) sBtn.classList.add('active');
+  state.mode = mode;
+  state.currentScene = null;
+  if (isMobile()) setSidebar(false);
+  render();
+}
+
 document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    state.mode = btn.dataset.mode;
-    state.currentScene = null;
-    render();
-  });
+  btn.addEventListener('click', () => switchMode(btn.dataset.mode));
 });
 
 // ============================================================
