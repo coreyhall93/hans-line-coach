@@ -962,6 +962,173 @@
     font-style: italic;
   }
 
+  /* Acting Notes */
+  :root {
+    --notes: #92600a;
+    --notes-bg: #fef9ed;
+    --notes-border: #f0d68a;
+    --notes-light: #fdf3d7;
+  }
+
+  .acting-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--notes-light);
+    border: 1.5px solid var(--notes-border);
+    color: var(--notes);
+    font-size: 0.65rem;
+    cursor: pointer;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+    transition: background var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .acting-dot:hover { background: var(--notes-border); }
+
+  .acting-note-block {
+    display: none;
+    background: var(--notes-bg);
+    border: 1px solid var(--notes-border);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.75rem;
+    margin-top: 0.4rem;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--notes);
+    font-style: italic;
+  }
+
+  .acting-note-block.open { display: block; }
+
+  .acting-note-reveal {
+    margin-top: 0.35rem;
+    padding-left: 0.25rem;
+  }
+
+  .dialogue-line-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .dialogue-line-row .dialogue-line { flex: 1; }
+  .dialogue-line-row .acting-dot { margin-top: 0.5rem; }
+
+  .spine-card {
+    background: var(--notes-bg);
+    border: 1.5px solid var(--notes-border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .spine-core {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--notes);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .spine-detail {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: #6b4f1d;
+    margin-bottom: 0.4rem;
+  }
+
+  .spine-detail:last-child { margin-bottom: 0; }
+
+  .notes-section-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .notes-section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  .notes-section-subtitle {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin: 0.75rem 0 0.35rem;
+  }
+
+  .notes-section-subtitle:first-child { margin-top: 0; }
+
+  .notes-list-item {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    padding: 0.2rem 0 0.2rem 0.75rem;
+    border-left: 2px solid var(--border);
+    margin-bottom: 0.35rem;
+  }
+
+  .ref-grid { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .ref-item {
+    background: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.75rem;
+  }
+
+  .ref-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .ref-from {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+  }
+
+  .ref-note {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .scene-acting-line {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .scene-acting-line:last-child { border-bottom: none; }
+
+  .scene-acting-linetext {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    max-width: 40%;
+    font-style: italic;
+  }
+
+  .scene-acting-note {
+    font-size: 0.8125rem;
+    color: var(--notes);
+    line-height: 1.5;
+  }
+
   /* Sync */
   .sync-btn {
     display: inline-flex;
@@ -1141,6 +1308,7 @@
   <button class="sidebar-nav-item" data-mode="type-it" onclick="switchMode('type-it')">Type It</button>
   <button class="sidebar-nav-item" data-mode="quiz" onclick="switchMode('quiz')">Quiz</button>
   <button class="sidebar-nav-item" data-mode="full-script" onclick="switchMode('full-script')">Full Script</button>
+  <button class="sidebar-nav-item" data-mode="acting-notes" onclick="switchMode('acting-notes')">Acting Notes</button>
   <div class="sidebar-divider"></div>
   <button class="sidebar-link" onclick="openSyncModal(); setSidebar(false);">Cloud Sync</button>
   <button class="sidebar-link" onclick="document.getElementById('help-overlay').classList.remove('hidden'); setSidebar(false);">Help & Shortcuts</button>
@@ -1186,6 +1354,7 @@
   <button class="nav-btn" data-mode="type-it">Type It</button>
   <button class="nav-btn" data-mode="quiz">Quiz</button>
   <button class="nav-btn" data-mode="full-script">Full Script</button>
+  <button class="nav-btn" data-mode="acting-notes">Acting Notes</button>
 </nav>
 
 <div class="main" id="main-content">
@@ -1204,7 +1373,9 @@
     <h3>Quiz</h3>
     <p>Multiple choice. Great for song lyrics and tricky lines.</p>
     <h3>Full Script</h3>
-    <p>Read through all Hans scenes with lines highlighted.</p>
+    <p>Read through all Hans scenes with lines highlighted. Tap the amber <strong>N</strong> dots on Hans lines to see acting notes.</p>
+    <h3>Acting Notes</h3>
+    <p>Character spine, technique, references, and scene-by-scene acting directions. Your rehearsal companion.</p>
     <h3>Keyboard Shortcuts</h3>
     <ul>
       <li><kbd>Space</kbd> — Reveal line / Next</li>
@@ -1700,6 +1871,236 @@ const SCENES = [
     ]
   },
 ];
+
+// ============================================================
+// ACTING NOTES
+// ============================================================
+const ACTING_NOTES = {
+  spine: {
+    core: "I will prove I matter.",
+    details: [
+      "Hans is the thirteenth son. He's invisible in his own family. His brothers pretended he didn't exist for two years. That's not backstory flavor — that's the wound the whole character runs on.",
+      "He doesn't want the throne because he's greedy. He wants it because it's the only way he can think of to stop being nobody.",
+      "Don't play \"I'm pretending to love her.\" Play \"this girl makes me feel something and I'm going to use that.\" Both things are true at the same time. That's what makes him dangerous.",
+      "The reveal isn't him dropping a mask. It's him choosing his spine over the one person who made him feel seen. There's grief in that line if you let it exist, even just a flicker.",
+      "Hans isn't faking everything. The loneliness was real. The cruel brothers were real. The desire for a family might even be real. He's using true things in service of a lie. That's what makes him effective. And that's what makes him tragic.",
+      "Don't judge him while you're playing him. Understand him. Let the audience do the judging."
+    ]
+  },
+
+  technique: {
+    physical: [
+      "Heart is a light pointing at the audience — keep it pointed straight ahead. Angle your body open to the house.",
+      "Open body language in public scenes: shoulders back, palms visible, leaning toward people.",
+      "In villain scenes, give yourself permission to be still. Stillness reads as control.",
+      "In courtship scenes, stay physically attentive to Anna. Match her movements. When she steps forward, you step forward.",
+      "You're Hans, not Corey. Once you believe you are that person, the body image stuff falls away."
+    ],
+    voice: [
+      "Laban Effort system — 8 base voice textures from combining Weight (light/strong), Space (direct/indirect), and Time (sudden/sustained):",
+      "Dab (light, direct, sudden) · Flick (light, indirect, sudden) · Press (strong, direct, sustained) · Thrust (strong, direct, sudden)",
+      "Wring (strong, indirect, sustained) · Slash (strong, indirect, sudden) · Float (light, indirect, sustained) · Glide (light, direct, sustained)",
+      "Layer in placement (nasal/throaty/neutral), breath quality, and tempo to create distinct vocal colors for different Hans modes."
+    ],
+    director: [
+      "3/3 Scarlett: \"You're doing good. I can tell you're more confident.\" Not looking uncomfortable anymore.",
+      "Face the audience — turn to face out. Getting better at angling body toward the house.",
+      "Remember: you've got to believe you're Hans. The more you do it, the better you get."
+    ]
+  },
+
+  references: [
+    { name: "Tom Ripley", from: "The Talented Mr. Ripley (1999)", note: "Primary text. Ripley is a chameleon who becomes what people want to see. He wants belonging, status, a different life. Watch how Damon plays warmth and menace simultaneously." },
+    { name: "Amy Dunne", from: "Gone Girl (2014)", note: "The 'cool girl' monologue is Hans's internal philosophy. Amy performs the perfect wife the same way Hans performs the perfect prince. Study Pike's face alone versus with others." },
+    { name: "Commodus", from: "Gladiator (2000)", note: "Another youngest child desperate for approval and power. Phoenix plays the neediness underneath the cruelty. Hans has better control, but the wound is similar." },
+    { name: "Loki", from: "Thor / The Avengers", note: "The charming trickster. Hiddleston makes Loki's betrayals land because you genuinely like him. Funny, wounded, and dangerous. Hans needs that same balance." },
+    { name: "Joe Goldberg", from: "You, Season 1", note: "Joe narrates his stalking as romance. He believes his own story. Hans has that same capacity for self-justification. Watch how Badgley plays sincerity while doing terrible things." },
+    { name: "Hans Landa", from: "Inglourious Basterds (2009)", note: "For interrogation energy. Polite, even friendly, while destroying people. The opening farmhouse scene is a masterclass in menace disguised as conversation." },
+    { name: "Hugh Grant", from: "90s romantic comedies", note: "For the first meeting with Anna. The stammering, self-effacing British charm. Hans is doing a version of that performance." },
+    { name: "Edward Norton", from: "Primal Fear (1996)", note: "For the library reveal. Watch the scene where Norton's character drops the stutter. That shift from vulnerable to predator in a single moment." }
+  ],
+
+  scenes: {
+    "first-meeting": {
+      approach: "This is the most honest Hans gets. He's not calculating yet — he's a decent person meeting someone interesting. Every reaction is genuine. Don't overthink it.",
+      lines: {
+        2: "Reflexive concern. Quick, warm, no performance. A little breathless from the fall. \"Are you okay?\" lands soft, maybe even a little amused. You're intrigued.",
+        4: "\"It's perfectly fine\" settles her anxiety. Then \"Hi\" is a reset — starting fresh, giving her a clean slate. There's a small pivot between the two phrases. That's where the smile starts.",
+        8: "Anna says they've never met — you choose to reframe it. This is Hans being forward for maybe the first time. He doesn't want this interaction to end and he's saying so. A little bit of courage in it. Small smile in your voice.",
+        11: "First sync moment. You both say it at the same time and it registers. The laugh should sound surprised and delighted — a warm, slightly amazed chuckle. \"What are the odds?\"",
+        15: "She just accidentally called you gorgeous. You're flustered too, covering with an overly formal compliment that sounds rehearsed because you're nervous. Warm and direct. Mean it.",
+        17: "Genuine deference that's also playful. He's enjoying the formality because it gives him something to do with his hands. A nervous person reaching for protocol. Let there be a flicker of surprise: \"Princess?\"",
+        20: "The most important two words in the scene. She just called herself 'the spare' and you're looking at her thinking: what are you talking about? Something in you rejects her self-dismissal instinctively. Say it soft. Let a small smile start before you say it. Don't rush it — let the question land.",
+        22: "Surprised. She just admitted something vulnerable and it landed on you. The \"Really?\" is you leaning in because you want to know more, and that wanting catches you off guard. Try it softer than you think — almost under your breath.",
+        24: "You're finishing her thought. The sync showing up again. You surprised yourself by saying it. Play it like it just slipped out.",
+        27: "The most honest moment in the whole scene. One word. He doesn't want her to go. No charm, no formality, no clever reframe. Just: wait. Let it be simple. Let it cost him something to say it."
+      }
+    },
+
+    "hans-of-the-southern-isles": {
+      approach: "The song is a continuation of the conversation, not a performance for an audience. He's matching her vulnerability with his own. Two people who've felt invisible their whole lives just found each other.",
+      lines: {
+        0: "Same energy as \"Wait\" but more committed. He's made a decision. Then the music carries him.",
+        1: "He's one-downing her. She's \"just the spare\"? He's the THIRTEENTH son. You're awkward? He knocked her to the ground. Building connection through shared inadequacy.",
+        2: "\"A man you won't see in a statue of bronze / Just Hans of the Southern Isles\" — a shrug in your voice. Self-aware. A little rueful. Like you've made peace with being nobody. This makes Anna want to tell you you're somebody.",
+        3: "He's not performing gratitude. He's relieved. Nobody quotes him, nobody notices him, and right now that feels like freedom rather than a wound, because this girl doesn't care about any of that either.",
+        6: "The scene started with a clumsy \"Hi\" from both of them. Now it's deliberate. He's using her full name because she matters. The bookend should feel earned. He knows her now and he's choosing her.",
+        9: "Simple confirmation. But let it land with warmth — this isn't casual. He means it."
+      }
+    },
+
+    "coronation-ball": {
+      approach: "Hans has been thinking about Anna since they met. He spots her upset and crosses toward her — this is attentive, not opportunistic. He notices her mood because he cares.",
+      lines: {
+        1: "Warm recognition. He's been looking for her.",
+        3: "He noticed she's upset. This is genuine concern. Not probing — just checking in.",
+        5: "Eager but not desperate. He's been hoping for more time with her."
+      }
+    },
+
+    "anna-and-hans-talk": {
+      approach: "This is the most intimate scene before the song. They're alone for the first time. Hans opens up with real vulnerability — his childhood was genuinely painful. Play the truth of the emotions.",
+      lines: {
+        0: "Fond. Almost teasing. Like you're picturing little Anna and finding her adorable. There's warmth here. You want her to keep talking.",
+        2: "Real anger on her behalf. You're taking her side against everyone who ever dismissed her. Let there be some heat underneath — controlled, not shouting. Drop your voice slightly. You actually do hate when people say that. Because Hans has heard it too.",
+        4: "Simply state it. Not fishing for sympathy. Just a fact. Let it hang there.",
+        6: "Two parts. Humiliation has weight — you remember specific moments. Ignoring lands even heavier. Being ignored is almost worse. You weren't worth their cruelty. You were nothing. But don't wallow. State it and move forward. Hans has processed this.",
+        8: "\"Of course\" like it's obvious. Then \"Don't you?\" lands soft, curious, already knowing the answer.",
+        10: "A promise. \"Oh Anna\" should sound tender — almost overcome. Then \"I could never shut you out\" is a vow. Direct eye contact. This is the line that will haunt the library scene later. But right now, in this moment, you mean it. You need her to believe it, and part of playing it well is that YOU believe it."
+      }
+    },
+
+    "love-is-an-open-door": {
+      approach: "Two lonely people finding each other. The song is genuine bonding — you're caught up in the impossibility of it. Keep the energy joyful, not frantic. You're having fun. The whole thing is a conversation set to music.",
+      lines: {
+        1: "Simple, warm. You're encouraging her to be herself.",
+        3: "Jumping in with \"me too.\" You have so much to say that regular speech can't contain it. You need music.",
+        16: "Stop to acknowledge this is insane. You just met. This shouldn't be happening. But it is. Say \"crazy\" like you're delighted by the impossibility.",
+        18: "Building to the comedy beat.",
+        20: "A lie — you were going to say \"sentences.\" But you commit to the bit because Anna is charmed by her own weirdness, and you're charmed by whatever she's charmed by. Genuine delight. Laugh a little.",
+        40: "The proposal. The close. Simple, don't oversell. You're not begging — you're offering. You're giving her the fairy tale ending she's always wanted. Slow everything down. This is the pivot point."
+      }
+    },
+
+    "asking-blessing": {
+      approach: "Hans and Anna are giddy. He's nervous meeting the Queen but trying to be proper. When Elsa shuts them down, he tries diplomacy — genuine instinct to smooth things over.",
+      lines: {
+        3: "Formal introduction. A bit nervous in front of the Queen.",
+        5: "Nervous excitement. Tripping over words with Anna.",
+        17: "Immediate, enthusiastic. No hesitation — he genuinely wants to live here, with her.",
+        26: "Diplomatic instinct. Trying to ease tension. He can see this going sideways."
+      }
+    },
+
+    "elsa-flees": {
+      approach: "Everything has changed in an instant. Hans is genuinely worried about Anna going after Elsa alone.",
+      lines: {
+        2: "Real concern. He doesn't know what Elsa is capable of. He's trying to protect Anna."
+      }
+    },
+
+    "leading-arendelle": {
+      approach: "Hans is performing leadership, but if you're playing sincere Act 1, it's not cynical — he genuinely wants to help. He's stepping up because someone has to, and he's good at it.",
+      lines: {
+        2: "Practical, warm. He's distributing blankets and making people feel safe.",
+        4: "Opening the castle — generous, decisive. He's doing what a leader should do.",
+        6: "Honest. He doesn't sugarcoat it.",
+        10: "Defending Elsa through Anna. He trusts Anna's judgment. This should feel genuine.",
+        12: "Quiet authority. He's not yelling — he's correcting.",
+        14: "Shutting down ignorance. Firm. Protective of the people.",
+        16: "Standing his ground. He IS in charge and he's doing the job well. Let the authority feel earned.",
+        20: "The private name first. Just \"Anna.\" Real fear in that single word.",
+        21: "Rallying. He shifts from private grief to public action. He needs help and he's not too proud to ask."
+      }
+    },
+
+    "southern-isles-reprise": {
+      approach: "Hans is auditioning for king — but playing sincere, he genuinely believes in what he's saying. He loves Anna. He wants to save her. And he's discovering he might be good at leading.",
+      lines: {
+        0: "Earnest plea. He's asking them to trust him based on nothing but his love for their princess.",
+        2: "The song is a rallying cry. He's using his 'thirteenth son' status as a strength now — humble, authentic, servant leadership. Let it build from quiet conviction to full authority.",
+        6: "\"Then she will be dealt with\" — not a threat, a promise of protection. And the second part is hope: \"Anna and I will lead you back to summer.\"",
+        8: "The payoff. They believe in him. He's finally somebody."
+      }
+    },
+
+    "mountain-search": {
+      approach: "This is the most overtly heroic Hans gets. No irony. He's scared for Anna and channeling fear into action.",
+      lines: {
+        0: "\"Anna\" first — the private name slipping out. Then \"Princess Anna\" is remembering he's in front of people. Let the first \"Anna\" be real fear.",
+        4: "A rallying cry. Ground it in specific fear — you saw her leave, you know what's up on that mountain. Don't go generic adventure hero. You don't know if she's alive."
+      }
+    },
+
+    "monster-scene": {
+      approach: "Hans doesn't sing in the Monster number. His silence during Elsa's crisis is significant — he's witnessing something he can't fix with charm or courage. He's out of his depth.",
+      lines: {
+        1: "The most important line in this sequence. It's offstage — voice alone, no face, no body. Protective fury. Someone just threatened the woman his love cares about. Go loud, go hard, no hesitation. This is the line where the audience should trust Hans completely."
+      }
+    },
+
+    "elsa-captured": {
+      approach: "Ambiguous territory. Hans is still protecting Elsa 'for Anna,' and that could be genuine. He's asserting dominance over Weselton, which feels righteous. But the spine is always there underneath.",
+      lines: {
+        2: "Dismissive. Deliberate mispronunciation. He's done being polite to this man.",
+        5: "Empathy, real or performed. Either way, he reads Elsa accurately — she IS scared.",
+        6: "Getting in Weselton's face. Controlled aggression. He means every word.",
+        9: "Simple. Final. Two words that could mean everything or nothing.",
+        11: "Interrogation begins. But if sincere, it's genuine worry — trying to piece together where Anna is.",
+        16: "\"I pray he is.\" Either a genuine hope or a chilling performance. Let the audience decide."
+      }
+    },
+
+    "the-reveal": {
+      approach: "The mask drops. Hans has already won. What comes out isn't rage or cackling villainy — it's relief. He can finally stop performing. The cruelty is in the casualness.",
+      lines: {
+        1: "He rushes in, takes her in his arms. The last moment of performance.",
+        3: "Assessing. How bad is it? What's the situation?",
+        5: "A flicker of accusation. You told me she wouldn't hurt you.",
+        7: "Processing. The wheels turning. If only an act of true love can save her...",
+        8: "A knife slipped between ribs. Quiet. Almost tender. He's not gloating — he's explaining, like a teacher correcting a student's math. There might be a flicker of grief: he's killing the part of himself that wanted it to be real.",
+        10: "Don't punch \"I lied.\" Throw it away. It's not a confession — it's a correction. He's tidying up her misunderstanding. Professional.",
+        12: "Transitioning from explanation to action. Businesslike."
+      }
+    },
+
+    "king-hans": {
+      approach: "The one moment Hans allows himself satisfaction. Keep it contained — he's not a mustache-twirler. He's a professional who just closed the biggest deal of his life.",
+      lines: {
+        2: "Satisfaction. But restrained. The crown is within reach and he's savoring it with control, not abandon.",
+        4: "\"Oh, I already have.\" Maximum stillness. Maximum control. This is what Hans has wanted all along."
+      }
+    },
+
+    "colder-by-the-minute": {
+      approach: "Hans is delivering devastating news with false sympathy. Every line is calculated for the audience of townspeople. He's performing grief while executing a plan.",
+      lines: {
+        1: "Deliver it like a eulogy. Solemn. Let the weight of the words do the work.",
+        3: "Building the case. Planting the narrative: Elsa did this.",
+        5: "The performance of grief. \"Before she died in my arms\" — let your voice catch, just slightly. This is Hans at his most dangerous: using real acting technique to manufacture emotion.",
+        7: "Two words. The pivot from mourning to action. Decisive. Cold underneath.",
+        9: "Sentencing. This is the endpoint. The spine fully in control. Don't rush it."
+      }
+    },
+
+    "confronting-elsa": {
+      approach: "Hunter energy. Patient. Hans has cornered his prey. He's weaponizing Elsa's guilt — he knows exactly what his words will do to her. Watch her break, then raise your sword.",
+      lines: {
+        1: "Authority. She can't escape what's coming.",
+        3: "Beginning to weaponize the information. Building toward the kill shot.",
+        5: "False sympathy. He's narrating a tragedy he orchestrated.",
+        6: "\"Your sister is dead... because of you.\" The kill shot. Pause before \"because of you.\" Let Elsa hear it. Let the audience hear it. Then watch her break."
+      }
+    },
+
+    "finale": {
+      approach: "The plan failed. Hans is genuinely confused — his scheme was airtight and somehow Anna survived.",
+      lines: {
+        3: "Real confusion. The spine is shattered. He can't comprehend how this happened."
+      }
+    }
+  }
+};
 
 // ============================================================
 // APP STATE
@@ -2219,7 +2620,7 @@ function readHash() {
   const parts = hash.split('/');
   const mode = parts[0];
   const sceneId = parts[1] || null;
-  const validModes = ['scene-run', 'cue-response', 'type-it', 'quiz', 'full-script'];
+  const validModes = ['scene-run', 'cue-response', 'type-it', 'quiz', 'full-script', 'acting-notes'];
   if (validModes.includes(mode)) {
     state.mode = mode;
     // Update nav button active states
@@ -2246,7 +2647,7 @@ window.addEventListener('hashchange', () => {
   const parts = hash.split('/');
   const mode = parts[0];
   const sceneId = parts[1] || null;
-  const validModes = ['scene-run', 'cue-response', 'type-it', 'quiz', 'full-script'];
+  const validModes = ['scene-run', 'cue-response', 'type-it', 'quiz', 'full-script', 'acting-notes'];
   if (validModes.includes(mode)) {
     state.mode = mode;
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -2283,6 +2684,7 @@ function render() {
     case 'type-it': renderTypeIt(main); break;
     case 'quiz': renderQuiz(main); break;
     case 'full-script': renderFullScript(main); break;
+    case 'acting-notes': renderActingNotes(main); break;
   }
 }
 
@@ -2349,12 +2751,20 @@ function renderSceneRun(main) {
       if (isStage) {
         html += `<div class="stage-direction" style="animation-delay:${idx * 0.04}s">${escapeHtml(line.text)}</div>`;
       } else if (isHans || isBoth) {
+        const actNote = getActingNote(scene.id, idx);
+        const noteId = `acting-${scene.id}-${idx}`;
         html += `<div class="dialogue-card" style="animation-delay:${idx * 0.04}s">`;
         html += `<div class="char-tag ${hansClass}">${line.char}${line.note ? ' ' + line.note : ''}</div>`;
         html += `<div class="hidden-line${evil ? ' evil-scene' : ''}" id="line-${lineId}" onclick="revealLine('${lineId}', this, ${evil})">
           <span class="prompt-text">Tap to reveal your line</span>
           <span class="actual-line">${escapeHtml(line.text).replace(/\n/g, '<br>')}</span>
         </div>`;
+        if (actNote) {
+          html += `<div class="acting-note-reveal" style="display:none" data-for="line-${lineId}">`;
+          html += `<span class="acting-dot" onclick="toggleActingNote('${noteId}')" title="Acting note">N</span>`;
+          html += `<div class="acting-note-block" id="${noteId}">${escapeHtml(actNote)}</div>`;
+          html += `</div>`;
+        }
         html += `</div>`;
       } else {
         html += `<div class="dialogue-card" style="animation-delay:${idx * 0.04}s">`;
@@ -2394,6 +2804,9 @@ function revealLine(lineId, el, isEvil) {
   setTimeout(() => {
     el.classList.add('revealed');
     if (isEvil) el.classList.add('evil');
+    // Show acting note indicator if present
+    const noteReveal = el.parentElement.querySelector('.acting-note-reveal[data-for="' + el.id + '"]');
+    if (noteReveal) noteReveal.style.display = 'block';
   }, 150);
 }
 
@@ -2910,16 +3323,26 @@ function renderFullScript(main) {
     html += `<div class="accordion-body"><div class="accordion-content">`;
     html += `<div class="accordion-desc">${scene.description}</div>`;
 
-    scene.lines.forEach(line => {
+    scene.lines.forEach((line, idx) => {
       if (line.char === 'stage') {
         html += `<div class="stage-direction">${escapeHtml(line.text)}</div>`;
       } else {
         const isHans = line.char === 'HANS' || line.char === 'BOTH';
         const tagClass = isHans ? (evil ? 'hans-evil' : 'hans') : charClass(line.char);
         const lineClass = isHans ? (evil ? 'hans-evil-line' : 'hans-line') : 'cue';
+        const actNote = isHans ? getActingNote(scene.id, idx) : null;
+        const noteId = `fs-acting-${scene.id}-${idx}`;
         html += `<div class="dialogue-card">`;
         html += `<div class="char-tag ${tagClass}">${line.char}${line.note ? ' ' + line.note : ''}</div>`;
-        html += `<div class="dialogue-line ${lineClass}${line.song ? ' song' : ''}">${escapeHtml(line.text).replace(/\n/g, '<br>')}</div>`;
+        if (actNote) {
+          html += `<div class="dialogue-line-row">`;
+          html += `<div class="dialogue-line ${lineClass}${line.song ? ' song' : ''}">${escapeHtml(line.text).replace(/\n/g, '<br>')}</div>`;
+          html += `<span class="acting-dot" onclick="toggleActingNote('${noteId}')" title="Acting note">N</span>`;
+          html += `</div>`;
+          html += `<div class="acting-note-block" id="${noteId}">${escapeHtml(actNote)}</div>`;
+        } else {
+          html += `<div class="dialogue-line ${lineClass}${line.song ? ' song' : ''}">${escapeHtml(line.text).replace(/\n/g, '<br>')}</div>`;
+        }
         html += `</div>`;
       }
     });
@@ -2936,6 +3359,117 @@ function toggleAccordion(idx) {
   const wasOpen = item.classList.contains('open');
   item.classList.toggle('open');
   // Scroll into view if opening
+  if (!wasOpen) {
+    setTimeout(() => {
+      item.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+}
+
+// ---- ACTING NOTES MODE ----
+function getActingNote(sceneId, lineIndex) {
+  const sceneNotes = ACTING_NOTES.scenes[sceneId];
+  if (!sceneNotes || !sceneNotes.lines) return null;
+  return sceneNotes.lines[lineIndex] || null;
+}
+
+function toggleActingNote(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+
+function renderActingNotes(main) {
+  let html = '';
+
+  // Spine card
+  html += `<div class="spine-card">
+    <div class="spine-core">"${escapeHtml(ACTING_NOTES.spine.core)}"</div>`;
+  ACTING_NOTES.spine.details.forEach(d => {
+    html += `<div class="spine-detail">${escapeHtml(d)}</div>`;
+  });
+  html += `</div>`;
+
+  // Technique card
+  html += `<div class="notes-section-card">
+    <div class="notes-section-title">Technique & Physicality</div>
+    <div class="notes-section-subtitle">Physical Presence</div>`;
+  ACTING_NOTES.technique.physical.forEach(p => {
+    html += `<div class="notes-list-item">${escapeHtml(p)}</div>`;
+  });
+  html += `<div class="notes-section-subtitle">Voice</div>`;
+  ACTING_NOTES.technique.voice.forEach(v => {
+    html += `<div class="notes-list-item">${escapeHtml(v)}</div>`;
+  });
+  html += `<div class="notes-section-subtitle">Director Feedback</div>`;
+  ACTING_NOTES.technique.director.forEach(d => {
+    html += `<div class="notes-list-item">${escapeHtml(d)}</div>`;
+  });
+  html += `</div>`;
+
+  // Character references
+  html += `<div class="notes-section-card">
+    <div class="notes-section-title">Character References</div>
+    <div class="ref-grid">`;
+  ACTING_NOTES.references.forEach(ref => {
+    html += `<div class="ref-item">
+      <div class="ref-name">${escapeHtml(ref.name)}</div>
+      <div class="ref-from">${escapeHtml(ref.from)}</div>
+      <div class="ref-note">${escapeHtml(ref.note)}</div>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  // Scene-by-scene accordion
+  html += `<div class="notes-section-card" style="padding:0.5rem;">
+    <div class="notes-section-title" style="padding:0.5rem;">Scene-by-Scene Notes</div>`;
+
+  const chevronSvg = `<svg class="accordion-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>`;
+
+  SCENES.forEach((scene, sceneIdx) => {
+    const sceneNotes = ACTING_NOTES.scenes[scene.id];
+    if (!sceneNotes) return;
+
+    html += `<div class="accordion-item" id="notes-accordion-${sceneIdx}">`;
+    html += `<div class="accordion-header" onclick="toggleNotesAccordion(${sceneIdx})">`;
+    html += `<div class="accordion-header-left">`;
+    html += `<div class="accordion-scene-num">${scene.sceneNum}</div>`;
+    html += `<div class="accordion-title">${scene.title}</div>`;
+    html += `</div>`;
+    html += chevronSvg;
+    html += `</div>`;
+
+    html += `<div class="accordion-body"><div class="accordion-content">`;
+
+    if (sceneNotes.approach) {
+      html += `<div class="accordion-desc" style="color:var(--notes); font-style:normal; font-weight:500;">${escapeHtml(sceneNotes.approach)}</div>`;
+    }
+
+    if (sceneNotes.lines) {
+      Object.keys(sceneNotes.lines).forEach(idx => {
+        const lineIdx = parseInt(idx);
+        const line = scene.lines[lineIdx];
+        if (!line) return;
+        const lineText = line.text.length > 60 ? line.text.substring(0, 60) + '...' : line.text;
+        html += `<div class="scene-acting-line">
+          <div class="scene-acting-linetext">"${escapeHtml(lineText.replace(/\n/g, ' '))}"</div>
+          <div class="scene-acting-note">${escapeHtml(sceneNotes.lines[idx])}</div>
+        </div>`;
+      });
+    }
+
+    html += `</div></div></div>`;
+  });
+
+  html += `</div>`;
+
+  main.innerHTML = html;
+}
+
+function toggleNotesAccordion(idx) {
+  const item = document.getElementById('notes-accordion-' + idx);
+  if (!item) return;
+  const wasOpen = item.classList.contains('open');
+  item.classList.toggle('open');
   if (!wasOpen) {
     setTimeout(() => {
       item.scrollIntoView({ behavior: 'smooth', block: 'start' });
