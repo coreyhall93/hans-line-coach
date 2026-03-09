@@ -1129,6 +1129,93 @@
     line-height: 1.5;
   }
 
+  /* Voice Efforts */
+  .voice-efforts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+  }
+
+  .voice-effort-item {
+    background: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .voice-effort-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.65rem;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .voice-effort-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .voice-effort-recipe {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  .voice-effort-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 0.65rem;
+  }
+
+  .voice-effort-item.open .voice-effort-body {
+    max-height: 300px;
+    padding: 0 0.65rem 0.6rem;
+  }
+
+  .voice-effort-desc {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+  }
+
+  .voice-effort-hans {
+    font-size: 0.78rem;
+    color: var(--notes);
+    line-height: 1.45;
+  }
+
+  .voice-effort-hans strong {
+    font-weight: 600;
+  }
+
+  .voice-layer-item {
+    background: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.65rem;
+    margin-bottom: 0.35rem;
+    border: 1px solid var(--border);
+  }
+
+  .voice-layer-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.15rem;
+  }
+
+  .voice-layer-options {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+  }
+
   /* Sync */
   .sync-btn {
     display: inline-flex;
@@ -1896,12 +1983,25 @@ const ACTING_NOTES = {
       "In courtship scenes, stay physically attentive to Anna. Match her movements. When she steps forward, you step forward.",
       "You're Hans, not Corey. Once you believe you are that person, the body image stuff falls away."
     ],
-    voice: [
-      "Laban Effort system — 8 base voice textures from combining Weight (light/strong), Space (direct/indirect), and Time (sudden/sustained):",
-      "Dab (light, direct, sudden) · Flick (light, indirect, sudden) · Press (strong, direct, sustained) · Thrust (strong, direct, sudden)",
-      "Wring (strong, indirect, sustained) · Slash (strong, indirect, sudden) · Float (light, indirect, sustained) · Glide (light, direct, sustained)",
-      "Layer in placement (nasal/throaty/neutral), breath quality, and tempo to create distinct vocal colors for different Hans modes."
-    ],
+    voice: {
+      intro: "Rudolf Laban's system describes movement qualities that apply directly to vocal delivery. Three variables — Weight, Space, and Time — combine into 8 distinct effort qualities. Layer in placement, breath, and tempo to find different vocal colors for each version of Hans.",
+      efforts: [
+        { name: "Glide", recipe: "Light + Direct + Sustained", desc: "Smooth, clear, unhurried. This is default Prince Hans — the warm, composed charm in the courtyard, the easy \"Hi, Anna of Arendelle.\" Controlled and inviting. Your home base.", hans: "First meeting, coronation ball, most of Act 1 public moments" },
+        { name: "Float", recipe: "Light + Indirect + Sustained", desc: "Gentle, dreamy, drifting. When Hans is building intimacy and letting moments breathe. The soft \"Just you?\" The tender \"Oh Anna, I could never shut you out.\" Feels like thinking out loud.", hans: "Vulnerable confessions, Love Is an Open Door's quiet moments" },
+        { name: "Dab", recipe: "Light + Direct + Sudden", desc: "Quick, precise, pointed. Sharp little touches. Good for wit, one-liners, and light comedy beats. \"That's what I was gonna say!\" or \"Very much\" during the jinx.", hans: "Comedy beats, quick responses, banter with Anna" },
+        { name: "Flick", recipe: "Light + Indirect + Sudden", desc: "Tossed off, casual, throwaway. When Hans is being dismissive or effortlessly cool. \"That's enough, Weaseltown.\" Said like it barely deserves his attention.", hans: "Dismissing Weselton, casual authority" },
+        { name: "Press", recipe: "Strong + Direct + Sustained", desc: "Heavy, deliberate, relentless pressure. The interrogation voice. Each word lands with weight and stays. \"Your sister is dead... because of you.\" No rush. Let every syllable do damage.", hans: "Library reveal, confronting Elsa, sentencing scenes" },
+        { name: "Thrust", recipe: "Strong + Direct + Sudden", desc: "A punch. Short, hard, explosive. \"NO HARM COMES TO HER!\" or \"Enough!\" One burst of force, then done. Use sparingly — it's powerful because it's rare.", hans: "Commands, protective outbursts, rare moments of raw force" },
+        { name: "Wring", recipe: "Strong + Indirect + Sustained", desc: "Twisting, anguished, conflicted. Strength that can't find a straight line. \"If only there was someone out there who loved you\" — there's grief underneath the cruelty. The voice wrings emotion out of the words.", hans: "The reveal line, any moment where Hans's spine wars with his feelings" },
+        { name: "Slash", recipe: "Strong + Indirect + Sudden", desc: "A violent swipe. Wild, cutting, dangerous. Hans rarely goes here — he's too controlled. But if Weselton pushes too far: \"Do not test me anymore. You will lose.\" The mask slips for a second.", hans: "Threatening Weselton, moments where control cracks" }
+      ],
+      layers: [
+        { name: "Placement", options: "Nasal (forward, buzzy) · Throaty (low, dark) · Neutral (balanced)", hans: "Hans lives in neutral-to-throaty. Drops throaty in villain scenes. Never nasal — that's Weselton's territory." },
+        { name: "Breath", options: "Breathy (intimate, vulnerable) · Dry/Clean (controlled, precise)", hans: "Breathy for private moments with Anna. Dry and clean for public leadership and villain Hans. The shift from breathy to dry IS the reveal." },
+        { name: "Tempo", options: "Slow · Neutral · Fast", hans: "Act 1 Hans matches Anna's tempo — a little fast, energetic. Villain Hans slows down. He doesn't need to rush anymore. Slowness reads as power." },
+        { name: "Volume", options: "Quiet · Medium · Loud", hans: "Hans is mostly medium. He goes quiet for intimacy (\"Just you?\") and for menace (\"I lied.\"). Loud only for commands and rallying. The quietest moments are often the most dangerous." }
+      ]
+    },
     director: [
       "3/3 Scarlett: \"You're doing good. I can tell you're more confident.\" Not looking uncomfortable anymore.",
       "Face the audience — turn to face out. Getting better at angling body toward the house.",
@@ -3396,9 +3496,28 @@ function renderActingNotes(main) {
   ACTING_NOTES.technique.physical.forEach(p => {
     html += `<div class="notes-list-item">${escapeHtml(p)}</div>`;
   });
-  html += `<div class="notes-section-subtitle">Voice</div>`;
-  ACTING_NOTES.technique.voice.forEach(v => {
-    html += `<div class="notes-list-item">${escapeHtml(v)}</div>`;
+  html += `<div class="notes-section-subtitle">Voice — Laban Effort System</div>`;
+  html += `<div class="notes-list-item">${escapeHtml(ACTING_NOTES.technique.voice.intro)}</div>`;
+  html += `<div class="voice-efforts">`;
+  ACTING_NOTES.technique.voice.efforts.forEach(e => {
+    html += `<div class="voice-effort-item">`;
+    html += `<div class="voice-effort-header" onclick="this.parentElement.classList.toggle('open')">`;
+    html += `<span class="voice-effort-name">${escapeHtml(e.name)}</span>`;
+    html += `<span class="voice-effort-recipe">${escapeHtml(e.recipe)}</span>`;
+    html += `</div>`;
+    html += `<div class="voice-effort-body">`;
+    html += `<div class="voice-effort-desc">${escapeHtml(e.desc)}</div>`;
+    html += `<div class="voice-effort-hans"><strong>Hans:</strong> ${escapeHtml(e.hans)}</div>`;
+    html += `</div></div>`;
+  });
+  html += `</div>`;
+  html += `<div class="notes-section-subtitle" style="margin-top:1rem;">Voice Layers</div>`;
+  ACTING_NOTES.technique.voice.layers.forEach(l => {
+    html += `<div class="voice-layer-item">`;
+    html += `<div class="voice-layer-name">${escapeHtml(l.name)}</div>`;
+    html += `<div class="voice-layer-options">${escapeHtml(l.options)}</div>`;
+    html += `<div class="voice-effort-hans"><strong>Hans:</strong> ${escapeHtml(l.hans)}</div>`;
+    html += `</div>`;
   });
   html += `<div class="notes-section-subtitle">Director Feedback</div>`;
   ACTING_NOTES.technique.director.forEach(d => {
