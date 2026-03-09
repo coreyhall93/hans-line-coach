@@ -845,6 +845,123 @@
     scroll-margin-top: 100px;
   }
 
+  /* Accordion for Full Script */
+  .accordion-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    transition: box-shadow var(--transition-fast);
+  }
+
+  .accordion-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    gap: 0.75rem;
+  }
+
+  .accordion-header-left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .accordion-scene-num {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 0.125rem;
+  }
+
+  .accordion-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .accordion-meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 0.2rem;
+  }
+
+  .accordion-location {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .accordion-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .accordion-badge.song {
+    background: #fff4de;
+    color: var(--warning);
+  }
+
+  .accordion-badge.evil {
+    background: var(--hans-evil-bg);
+    color: var(--hans-evil);
+  }
+
+  .accordion-chevron {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--gray-20);
+    transition: transform var(--transition-emphasis);
+  }
+
+  .accordion-item.open .accordion-chevron {
+    transform: rotate(180deg);
+  }
+
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .accordion-item.open .accordion-body {
+    max-height: 5000px;
+    transition: max-height 0.5s ease-in;
+  }
+
+  .accordion-content {
+    padding: 0 1rem 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .accordion-content .dialogue-card:first-child,
+  .accordion-content .stage-direction:first-child {
+    margin-top: 0.75rem;
+  }
+
+  .accordion-desc {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin: 0.75rem 0 0.5rem;
+    font-style: italic;
+  }
+
   /* Sync */
   .sync-btn {
     display: inline-flex;
@@ -2297,19 +2414,28 @@ function renderCueResponse(main) {
     for (let i = 0; i < scene.lines.length; i++) {
       const line = scene.lines[i];
       if (line.char === 'HANS' || line.char === 'BOTH') {
-        // Find preceding cue
+        // Find preceding cue — if there's a stage direction, also grab the dialogue before it
         let cue = null;
+        let stageDirection = null;
         for (let j = i - 1; j >= 0; j--) {
-          if (scene.lines[j].char !== 'stage' && scene.lines[j].char !== 'HANS') {
-            cue = scene.lines[j];
+          if (scene.lines[j].char === 'stage') {
+            stageDirection = scene.lines[j];
+            // Keep looking for the dialogue line before the stage direction
+            for (let k = j - 1; k >= 0; k--) {
+              if (scene.lines[k].char !== 'stage' && scene.lines[k].char !== 'HANS') {
+                cue = scene.lines[k];
+                break;
+              }
+            }
             break;
-          } else if (scene.lines[j].char === 'stage') {
+          } else if (scene.lines[j].char !== 'HANS') {
             cue = scene.lines[j];
             break;
           }
         }
         pairs.push({
           cue,
+          stageDirection,
           response: line,
           sceneId: scene.id,
           sceneTitle: scene.title,
@@ -2350,16 +2476,16 @@ function renderCueResponse(main) {
     <div class="scene-label">${pair.sceneNum} — ${pair.sceneTitle}</div>`;
 
   if (pair.cue) {
-    if (pair.cue.char === 'stage') {
-      html += `<div class="stage-direction">${escapeHtml(pair.cue.text)}</div>`;
-    } else {
-      html += `<div class="dialogue-card">`;
-      html += `<div class="char-tag ${charClass(pair.cue.char)}">${pair.cue.char}</div>`;
-      html += `<div class="dialogue-line cue${pair.cue.song ? ' song' : ''}">${escapeHtml(pair.cue.text).replace(/\n/g, '<br>')}</div>`;
-      html += `</div>`;
-    }
-  } else {
+    html += `<div class="dialogue-card">`;
+    html += `<div class="char-tag ${charClass(pair.cue.char)}">${pair.cue.char}</div>`;
+    html += `<div class="dialogue-line cue${pair.cue.song ? ' song' : ''}">${escapeHtml(pair.cue.text).replace(/\n/g, '<br>')}</div>`;
+    html += `</div>`;
+  } else if (!pair.stageDirection) {
     html += `<div class="stage-direction">[ Scene opens — Hans speaks first ]</div>`;
+  }
+
+  if (pair.stageDirection) {
+    html += `<div class="stage-direction">${escapeHtml(pair.stageDirection.text)}</div>`;
   }
 
   const hansTag = pair.evil ? 'hans-evil' : 'hans';
@@ -2441,17 +2567,25 @@ function renderTypeIt(main) {
       const line = scene.lines[i];
       if (line.char === 'HANS') {
         let cue = null;
+        let stageDirection = null;
         for (let j = i - 1; j >= 0; j--) {
-          if (scene.lines[j].char !== 'stage' && scene.lines[j].char !== 'HANS') {
-            cue = scene.lines[j];
+          if (scene.lines[j].char === 'stage') {
+            stageDirection = scene.lines[j];
+            for (let k = j - 1; k >= 0; k--) {
+              if (scene.lines[k].char !== 'stage' && scene.lines[k].char !== 'HANS') {
+                cue = scene.lines[k];
+                break;
+              }
+            }
             break;
-          } else if (scene.lines[j].char === 'stage') {
+          } else if (scene.lines[j].char !== 'HANS') {
             cue = scene.lines[j];
             break;
           }
         }
         pairs.push({
           cue,
+          stageDirection,
           response: line,
           sceneId: scene.id,
           sceneTitle: scene.title,
@@ -2485,14 +2619,14 @@ function renderTypeIt(main) {
     <div class="scene-label">${pair.sceneNum} — ${pair.sceneTitle}</div>`;
 
   if (pair.cue) {
-    if (pair.cue.char === 'stage') {
-      html += `<div class="stage-direction">${escapeHtml(pair.cue.text)}</div>`;
-    } else {
-      html += `<div class="dialogue-card">`;
-      html += `<div class="char-tag ${charClass(pair.cue.char)}">${pair.cue.char}</div>`;
-      html += `<div class="dialogue-line cue${pair.cue.song ? ' song' : ''}">${escapeHtml(pair.cue.text).replace(/\n/g, '<br>')}</div>`;
-      html += `</div>`;
-    }
+    html += `<div class="dialogue-card">`;
+    html += `<div class="char-tag ${charClass(pair.cue.char)}">${pair.cue.char}</div>`;
+    html += `<div class="dialogue-line cue${pair.cue.song ? ' song' : ''}">${escapeHtml(pair.cue.text).replace(/\n/g, '<br>')}</div>`;
+    html += `</div>`;
+  }
+
+  if (pair.stageDirection) {
+    html += `<div class="stage-direction">${escapeHtml(pair.stageDirection.text)}</div>`;
   }
 
   html += `<div class="dialogue-card" style="margin-top: 1rem;">
@@ -2615,13 +2749,23 @@ function renderQuiz(main) {
       const line = scene.lines[i];
       if (line.char === 'HANS' && line.text.length > 15) {
         let cue = null;
+        let stageDirection = null;
         for (let j = i - 1; j >= 0; j--) {
-          if (scene.lines[j].char !== 'stage' && scene.lines[j].char !== 'HANS') {
+          if (scene.lines[j].char === 'stage') {
+            stageDirection = scene.lines[j];
+            for (let k = j - 1; k >= 0; k--) {
+              if (scene.lines[k].char !== 'stage' && scene.lines[k].char !== 'HANS') {
+                cue = scene.lines[k];
+                break;
+              }
+            }
+            break;
+          } else if (scene.lines[j].char !== 'HANS') {
             cue = scene.lines[j];
             break;
           }
         }
-        if (cue) {
+        if (cue || stageDirection) {
           // Get wrong answers from other Hans lines
           const wrongs = allHans
             .filter(h => h.text !== line.text && h.text.length > 10)
@@ -2632,6 +2776,7 @@ function renderQuiz(main) {
           if (wrongs.length >= 2) {
             questions.push({
               cue,
+              stageDirection,
               correct: line.text,
               options: shuffle([line.text, ...wrongs.slice(0, 3)]),
               sceneTitle: scene.title,
@@ -2669,10 +2814,16 @@ function renderQuiz(main) {
     <div class="scene-label">${q.sceneNum} — ${q.sceneTitle}</div>
     <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">What does Hans say next?</p>`;
 
-  html += `<div class="dialogue-card">`;
-  html += `<div class="char-tag ${charClass(q.cue.char)}">${q.cue.char}</div>`;
-  html += `<div class="dialogue-line cue">${escapeHtml(q.cue.text).replace(/\n/g, '<br>')}</div>`;
-  html += `</div>`;
+  if (q.cue) {
+    html += `<div class="dialogue-card">`;
+    html += `<div class="char-tag ${charClass(q.cue.char)}">${q.cue.char}</div>`;
+    html += `<div class="dialogue-line cue">${escapeHtml(q.cue.text).replace(/\n/g, '<br>')}</div>`;
+    html += `</div>`;
+  }
+
+  if (q.stageDirection) {
+    html += `<div class="stage-direction">${escapeHtml(q.stageDirection.text)}</div>`;
+  }
 
   html += `<div style="margin-top:1rem;">`;
   q.options.forEach((opt, oi) => {
@@ -2734,17 +2885,31 @@ function shuffle(arr) {
 
 // ---- FULL SCRIPT MODE ----
 function renderFullScript(main) {
-  let html = `<div class="card" style="text-align:center; margin-bottom:1rem;">
-    <p style="color:var(--text-muted); font-size:0.85rem;">All Hans scenes with lines highlighted. Use this as a reference while studying.</p>
+  let html = `<div style="text-align:center; margin-bottom:0.75rem;">
+    <p style="color:var(--text-muted); font-size:0.85rem;">Tap a scene to expand it. Use as a quick reference while studying.</p>
   </div>`;
 
-  SCENES.forEach(scene => {
-    html += `<div class="card">
-      <div class="scene-label">${scene.sceneNum} — ${scene.location}${scene.isSong ? ' | Song' : ''}</div>
-      <h2 style="margin-bottom: 0.25rem;">${scene.title}</h2>
-      <p style="color: var(--text-muted); font-size: 0.8125rem; margin-bottom: 1rem;">${scene.description}</p>`;
+  const chevronSvg = `<svg class="accordion-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>`;
 
+  SCENES.forEach((scene, sceneIdx) => {
     const evil = !!scene.evilHans;
+    let badges = '';
+    if (scene.isSong) badges += `<span class="accordion-badge song">Song</span>`;
+    if (evil) badges += `<span class="accordion-badge evil">Villain</span>`;
+
+    html += `<div class="accordion-item" id="accordion-${sceneIdx}">`;
+    html += `<div class="accordion-header" onclick="toggleAccordion(${sceneIdx})">`;
+    html += `<div class="accordion-header-left">`;
+    html += `<div class="accordion-scene-num">${scene.sceneNum}</div>`;
+    html += `<div class="accordion-title">${scene.title}</div>`;
+    html += `<div class="accordion-meta"><span class="accordion-location">${scene.location}</span>${badges}</div>`;
+    html += `</div>`;
+    html += chevronSvg;
+    html += `</div>`;
+
+    html += `<div class="accordion-body"><div class="accordion-content">`;
+    html += `<div class="accordion-desc">${scene.description}</div>`;
+
     scene.lines.forEach(line => {
       if (line.char === 'stage') {
         html += `<div class="stage-direction">${escapeHtml(line.text)}</div>`;
@@ -2759,10 +2924,23 @@ function renderFullScript(main) {
       }
     });
 
-    html += `</div>`;
+    html += `</div></div></div>`;
   });
 
   main.innerHTML = html;
+}
+
+function toggleAccordion(idx) {
+  const item = document.getElementById('accordion-' + idx);
+  if (!item) return;
+  const wasOpen = item.classList.contains('open');
+  item.classList.toggle('open');
+  // Scroll into view if opening
+  if (!wasOpen) {
+    setTimeout(() => {
+      item.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
 }
 
 // ============================================================
